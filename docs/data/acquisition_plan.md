@@ -86,8 +86,8 @@ Fonte:
 
 Uso no projeto:
 
-- Fonte auxiliar para contextualizar producao, vendas e exportacoes de veiculos chineses.
-- Possivel fonte de conciliacao macro para exportacoes chinesas de veiculos, sem substituir a consulta Comex Stat/MDIC.
+- Fonte valida para responder ou confirmar resultados quando houver definicao, granularidade e periodo compativeis com as perguntas.
+- Possivel fonte de conciliacao macro para exportacoes chinesas de veiculos.
 - Apoio metodologico para entender a diferenca entre dados de fabricantes, atacado, varejo e exportacao.
 
 Dados brutos esperados:
@@ -116,7 +116,7 @@ Campos alvo, quando disponiveis:
 Pendencias:
 
 - Confirmar disponibilidade publica historica mensal em formato estruturado.
-- Definir se os dados CAAM entrarao apenas no relatorio ou tambem no DuckDB como tabela auxiliar.
+- Definir, por tabela coletada, se os dados CAAM respondem diretamente uma pergunta, validam uma resposta ou apenas contextualizam.
 
 ## CPCA
 
@@ -128,9 +128,9 @@ Fonte:
 
 Uso no projeto:
 
-- Fonte auxiliar para dados de automoveis de passageiros, rankings de fabricantes/marcas e relatorios mensais.
+- Fonte valida para dados de automoveis de passageiros, rankings de fabricantes/marcas e relatorios mensais.
 - Apoio para classificar marcas chinesas, identificar fabricantes relevantes e contextualizar exportacoes/NEVs.
-- Nao substitui a ANFAVEA para medir emplacamentos no Brasil.
+- Pode responder diretamente ou validar as perguntas se houver recorte compativel com Brasil, periodo mensal e definicao operacional alinhada.
 
 Dados brutos esperados:
 

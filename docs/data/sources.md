@@ -16,7 +16,11 @@
 
 ## Papel das fontes chinesas
 
-CAAM e CPCA devem ser usadas como fontes auxiliares para contexto, classificacao e conciliacao da dinamica do mercado/exportacoes chinesas. Elas nao substituem:
+CAAM e CPCA sao fontes validas de evidencia para o projeto. Elas devem ser avaliadas pela capacidade de responder diretamente ou confirmar as perguntas de pesquisa com granularidade, definicao e cobertura compativeis.
 
-- ANFAVEA, que permanece como fonte primaria para emplacamentos no Brasil.
-- Comex Stat/MDIC, que permanece como fonte primaria para comercio exterior Brasil-China.
+Regra metodologica:
+
+- Se uma fonte responde diretamente uma pergunta com definicao compativel, ela pode ser usada como fonte primaria daquela resposta.
+- Se mede o mesmo fenomeno por outra definicao, ela deve ser usada para validacao cruzada e avaliacao de divergencias.
+- Se mede apenas contexto de mercado, ela entra como evidencia contextual.
+- Divergencias entre fontes devem ser documentadas em `ops/quality/` e no relatorio analitico.

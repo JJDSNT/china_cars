@@ -1,0 +1,41 @@
+policy:
+  principle: Todas as fontes sao validas para responder ou confirmar as perguntas se a definicao, granularidade, cobertura temporal e recorte geografico forem compativeis.
+  evidence_roles:
+    - primary_answer
+    - corroboration
+    - contextual
+  requirements:
+    - Registrar definicao operacional do indicador.
+    - Registrar fonte, URL, arquivo bruto, data de extracao e checksum quando aplicavel.
+    - Documentar divergencias entre fontes em ops/quality e no relatorio.
+    - Nao descartar fonte por origem institucional; avaliar aderencia empirica ao objetivo.
+
+sources:
+  - id: caam
+    name: China Association of Automobile Manufacturers
+    portuguese_name: Associacao Chinesa de Fabricantes de Automoveis
+    official_url: http://www.caam.org.cn/
+    expected_raw_path: data/raw/caam/
+    role: evidence_source
+    project_use:
+      - Responder diretamente perguntas quando houver recorte compativel.
+      - Confirmar ou contrastar tendencias de exportacao chinesa.
+      - Apoiar leitura metodologica da industria chinesa.
+    caveats:
+      - Verificar se o indicador mede emplacamento, venda, atacado, producao ou exportacao.
+      - Validar recorte geografico antes de comparar com Brasil.
+      - Disponibilidade historica estruturada precisa ser confirmada.
+  - id: cpca
+    name: China Passenger Car Association
+    portuguese_name: Associacao Chinesa de Automoveis de Passageiros
+    official_url: https://www.cpcaauto.com/
+    data_url: https://data.cpcadata.com/
+    expected_raw_path: data/raw/cpca/
+    role: evidence_source
+    project_use:
+      - Responder diretamente perguntas quando houver recorte compativel.
+      - Confirmar ou contrastar dados de automoveis de passageiros, fabricantes e exportacoes.
+      - Apoiar classificacao de fabricantes/marcas chinesas.
+    caveats:
+      - Separar varejo, atacado, exportacao e emplacamento antes de comparar fontes.
+      - Area de dados pode exigir coleta manual ou condicoes de acesso.

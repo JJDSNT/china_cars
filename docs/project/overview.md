@@ -29,7 +29,7 @@ Consultar a Comex Stat/MDIC filtrando o pais China e os codigos NCM informados p
 Fonte primaria planejada:
 
 - Comex Stat/MDIC, consulta mensal por NCM e pais.
-- CAAM e CPCA, como fontes auxiliares para contexto da industria chinesa, classificacao de marcas/fabricantes e validacao macro. Essas fontes nao substituem ANFAVEA nem Comex Stat/MDIC.
+- CAAM e CPCA, como fontes validas de evidencia para responder ou confirmar as perguntas quando houver granularidade, definicao e cobertura compativeis.
 
 Filtros iniciais:
 

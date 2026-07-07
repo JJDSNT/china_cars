@@ -26,19 +26,21 @@ research_scope:
       unresolved_items:
         - Confirmar se o fluxo desejado e importacao, exportacao ou ambos.
         - Confirmar se 87011 e um codigo intencional, prefixo ou erro de digitacao.
-  auxiliary_sources:
+  evidence_sources:
     - id: caam
       name: China Association of Automobile Manufacturers
-      role: Contexto e validacao cruzada da industria automotiva chinesa.
+      role: Fonte valida para responder ou confirmar resultados quando houver granularidade, definicao e cobertura compativeis.
       official_url: http://www.caam.org.cn/
-      does_not_replace:
-        - ANFAVEA para emplacamentos no Brasil.
-        - Comex Stat/MDIC para comercio exterior Brasil-China.
+      possible_uses:
+        - Resposta direta, se houver dados compativeis com a pergunta.
+        - Validacao cruzada de tendencias de exportacao e industria chinesa.
+        - Contexto para classificacao de fabricantes e marcas.
     - id: cpca
       name: China Passenger Car Association
-      role: Contexto, rankings e dados de automoveis de passageiros na China.
+      role: Fonte valida para responder ou confirmar dados de automoveis de passageiros quando houver aderencia ao recorte da pesquisa.
       official_url: https://www.cpcaauto.com/
       data_url: https://data.cpcadata.com/
-      does_not_replace:
-        - ANFAVEA para emplacamentos no Brasil.
-        - Comex Stat/MDIC para comercio exterior Brasil-China.
+      possible_uses:
+        - Resposta direta, se houver dados compativeis com Brasil, periodo e definicao.
+        - Validacao cruzada de rankings, fabricantes, marcas e exportacoes.
+        - Contexto para diferenciar varejo, atacado, exportacao e emplacamento.

@@ -24,7 +24,7 @@ datasets:
       owner: A definir
       update_frequency: monthly
       pii: false
-      role: auxiliary_context
+      role: evidence_source
     - name: raw_cpca_china_passenger_car_market
       source: CPCA
       path: data/raw/cpca/
@@ -33,7 +33,7 @@ datasets:
       owner: A definir
       update_frequency: monthly
       pii: false
-      role: auxiliary_context
+      role: evidence_source
   interim: []
   processed: []
   curated:
