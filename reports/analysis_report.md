@@ -68,6 +68,22 @@ Principais prefixos em 2026, janeiro-junho, por quantidade de veiculos:
 | 8707 (carrocerias) | 0 | 6.103.850 |
 | 8708 (autopecas) | 0 | 1.014.451.083 |
 
+## Estoque no canal (proxy importacao vs emplacamento)
+
+Cruzando o que **entra** no pais (importacao Comex, unidades) com o que e **emplacado** (ANFAVEA, marcas chinesas), obtem-se uma proxy direcional do estoque parado no canal (porto, importador, concessionaria). A serie ANFAVEA por segmento (`gold_anfavea_chinese_registrations_by_segment_monthly`) casa com os prefixos NCM correspondentes: automoveis com 8703; carga (comerciais leves + caminhoes) com 8704; onibus com 8702.
+
+Leituras principais (acumulado por ano, unidades):
+
+| Segmento | 2024 imp / empl | 2025 imp / empl | 2026 jan-jun imp / empl |
+| --- | ---: | ---: | ---: |
+| Automoveis (8703) | 172.136 / 186.536 | 236.304 / 258.831 | 384.681 / 225.508 |
+| Carga (8704) | 4.206 / 6.705 | 7.363 / 11.866 | 7.895 / 8.981 |
+
+- **Automoveis, 2026**: a importacao (384.681) supera os emplacamentos (225.508) em ~159 mil unidades — sinal de **estoque acumulando** no canal, consistente com o front-loading de importacoes antes do aumento do imposto de importacao.
+- **Carga/caminhoes**: os emplacamentos superam a importacao direta em todos os anos, sinal de **producao local / montagem CKD** no Brasil (marcas como Effa, Shineray e JAC), e nao de estoque.
+
+Ressalvas: o Comex e por pais de origem e a ANFAVEA por marca chinesa (populacoes que se sobrepoem, nao coincidem); ha defasagem de ~1-3 meses entre importar e emplacar; o NCM 8704 mistura picapes e caminhoes; e o emplacamento de automoveis antes de 2026 usa o proxy "Outras empresas", que inclui algumas marcas nao chinesas.
+
 ## Evidencias CPCA e CAAM
 
 As fontes chinesas foram integradas como evidencias validas para confirmar, contrastar ou contextualizar os resultados principais.
@@ -121,6 +137,7 @@ Os comunicados CAAM foram preservados no catalogo `raw_caam_evidence_catalog`. N
 - Tabelas finais:
   - `gold_anfavea_chinese_registrations_monthly` (serie mensal com banda piso/estimativa)
   - `gold_anfavea_chinese_registrations_by_brand_monthly` (detalhe por marca, inclui BYD/GWM/Omoda em 2026)
+  - `gold_anfavea_chinese_registrations_by_segment_monthly` (serie por segmento: automoveis, comerciais leves, caminhoes, onibus)
   - `raw_anfavea_origin_brand_monthly` (emplacamentos por empresa e marca, importados/nacionais)
   - `gold_comex_china_automotive_monthly`
   - `gold_comex_china_automotive_by_prefix_monthly`

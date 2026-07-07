@@ -233,6 +233,7 @@ def run_quality_checks(include_manifest: bool = True) -> dict[str, Any]:
         for table in [
             "gold_anfavea_chinese_registrations_monthly",
             "gold_anfavea_chinese_registrations_by_brand_monthly",
+            "gold_anfavea_chinese_registrations_by_segment_monthly",
             "raw_anfavea_origin_brand_monthly",
             "gold_comex_china_automotive_monthly",
             "gold_comex_china_automotive_by_prefix_monthly",
@@ -331,6 +332,12 @@ def run_quality_checks(include_manifest: bool = True) -> dict[str, Any]:
             checks,
             "gold_cpca_passenger_market_monthly",
             ["ano_mes"],
+        )
+        _check_unique_key(
+            con,
+            checks,
+            "gold_anfavea_chinese_registrations_by_segment_monthly",
+            ["ano_mes", "vehicle_group"],
         )
 
         _check_brand_scope_coverage(con, checks)

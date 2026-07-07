@@ -605,10 +605,53 @@ def build_anfavea_outputs(
     )
     monthly = monthly.sort_values("ano_mes").reset_index(drop=True)
 
+    # Serie mensal por segmento (vehicle_group), mesma logica de banda. Base do
+    # comparativo de estoque no canal: caminhoes, comerciais leves, automoveis
+    # e onibus separados, para casar com os prefixos NCM correspondentes.
+    group_keys = ["ano", "mes", "ano_mes", "vehicle_group"]
+    assoc_seg = (
+        associadas.groupby(group_keys, as_index=False)["emplacamentos"]
+        .sum()
+        .rename(columns={"emplacamentos": "emplacamentos_chinesas_associadas"})
+    )
+    det_seg = (
+        outras_detalhe.groupby(group_keys, as_index=False)["emplacamentos"]
+        .sum()
+        .rename(columns={"emplacamentos": "emplacamentos_chinesas_outras_detalhe"})
+    )
+    outras_seg = (
+        _canonical_vehicle_groups(df[df["row_level"].eq("section") & df["section"].eq("outras")])
+        .groupby(group_keys, as_index=False)["emplacamentos"]
+        .sum()
+        .rename(columns={"emplacamentos": "emplacamentos_outras_empresas_total"})
+    )
+    by_segment = (
+        assoc_seg.merge(outras_seg, on=group_keys, how="outer")
+        .merge(det_seg, on=group_keys, how="outer")
+    )
+    for col in ("emplacamentos_chinesas_associadas", "emplacamentos_outras_empresas_total"):
+        by_segment[col] = by_segment[col].fillna(0).astype(int)
+    seg_has_detail = by_segment["emplacamentos_chinesas_outras_detalhe"].notna()
+    by_segment["metodo_outras"] = seg_has_detail.map(
+        {True: "detalhe_por_marca", False: "proxy_outras_empresas"}
+    )
+    by_segment["emplacamentos_chinesas_min"] = (
+        by_segment["emplacamentos_chinesas_associadas"]
+        + by_segment["emplacamentos_chinesas_outras_detalhe"].fillna(0)
+    ).astype(int)
+    by_segment["emplacamentos"] = (
+        by_segment["emplacamentos_chinesas_associadas"]
+        + by_segment["emplacamentos_chinesas_outras_detalhe"].where(
+            seg_has_detail, by_segment["emplacamentos_outras_empresas_total"]
+        )
+    ).astype(int)
+    by_segment = by_segment.sort_values(["ano_mes", "vehicle_group"]).reset_index(drop=True)
+
     return {
         "raw_anfavea_company_monthly": df,
         "raw_anfavea_origin_brand_monthly": origin_monthly,
         "gold_anfavea_chinese_registrations_by_brand_monthly": by_brand,
+        "gold_anfavea_chinese_registrations_by_segment_monthly": by_segment,
         "gold_anfavea_chinese_registrations_monthly": monthly,
     }
 

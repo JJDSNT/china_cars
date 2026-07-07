@@ -1,8 +1,8 @@
-generated_at: '2026-07-07T15:56:05'
+generated_at: '2026-07-07T15:51:46'
 status: pass
 summary:
-  checks: 49
-  passed: 49
+  checks: 47
+  passed: 47
   failed: 0
 checks:
 - name: gold_anfavea_chinese_registrations_monthly.row_count
@@ -13,11 +13,6 @@ checks:
 - name: gold_anfavea_chinese_registrations_by_brand_monthly.row_count
   status: pass
   observed: 146
-  expected: '> 0'
-  details: ''
-- name: gold_anfavea_chinese_registrations_by_segment_monthly.row_count
-  status: pass
-  observed: 264
   expected: '> 0'
   details: ''
 - name: raw_anfavea_origin_brand_monthly.row_count
@@ -247,11 +242,6 @@ checks:
   observed: 0
   expected: 0
   details: ano_mes
-- name: gold_anfavea_chinese_registrations_by_segment_monthly.unique_key
-  status: pass
-  observed: 0
-  expected: 0
-  details: ano_mes, vehicle_group
 - name: brand_classification.scope_coverage
   status: pass
   observed: 0

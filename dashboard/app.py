@@ -47,6 +47,19 @@ def prefix_label(code: str) -> str:
     return PREFIX_LABELS.get(str(code), str(code))
 
 
+# Correspondencia entre segmentos ANFAVEA (emplacamentos) e prefixos NCM
+# (importacao). 8704 (carga) cobre picapes e caminhoes, entao casa com
+# "Comerciais leves + Caminhoes" da ANFAVEA; nao isola caminhoes puros.
+SEGMENT_MAP = {
+    "Carga - comerciais e caminhoes": {
+        "anfavea": ["Comerciais leves", "Caminhões"],
+        "comex": ["8704"],
+    },
+    "Automoveis": {"anfavea": ["Automóveis"], "comex": ["8703"]},
+    "Onibus": {"anfavea": ["Ônibus"], "comex": ["8702"]},
+}
+
+
 def filter_period(df: pd.DataFrame, period: tuple[str, str]) -> pd.DataFrame:
     return df[df["ano_mes"].between(period[0], period[1])].copy()
 
@@ -63,6 +76,9 @@ anfavea = con.execute(
 ).df()
 anfavea_brand = con.execute(
     "select * from gold_anfavea_chinese_registrations_by_brand_monthly order by ano_mes"
+).df()
+anfavea_segment = con.execute(
+    "select * from gold_anfavea_chinese_registrations_by_segment_monthly order by ano_mes"
 ).df()
 comex = con.execute("select * from gold_comex_china_automotive_monthly order by ano_mes").df()
 comex_prefix = con.execute(
@@ -84,8 +100,16 @@ period = st.sidebar.select_slider(
     value=(all_periods[0], all_periods[-1]),
 )
 
-tab_anfavea, tab_comex, tab_cpca, tab_caam, tab_compare, tab_data = st.tabs(
-    ["ANFAVEA", "Comex Stat", "CPCA", "CAAM", "Comparativo", "Dados"]
+(
+    tab_anfavea,
+    tab_comex,
+    tab_estoque,
+    tab_cpca,
+    tab_caam,
+    tab_compare,
+    tab_data,
+) = st.tabs(
+    ["ANFAVEA", "Comex Stat", "Estoque no canal", "CPCA", "CAAM", "Comparativo", "Dados"]
 )
 
 with tab_anfavea:
@@ -286,6 +310,127 @@ with tab_comex:
 
     st.dataframe(filtered_ncm, use_container_width=True, hide_index=True)
 
+with tab_estoque:
+    st.subheader("Estoque no canal (proxy)")
+    st.caption(
+        "Diferenca acumulada entre o que **entra** no pais (importacao Comex, unidades) "
+        "e o que e **emplacado** (ANFAVEA, marcas chinesas) e uma proxy do estoque parado "
+        "no canal (porto, importador, concessionaria). **Indicador direcional, nao exato**: "
+        "(1) o Comex e por pais de origem e a ANFAVEA por marca chinesa - populacoes que se "
+        "sobrepoem mas nao coincidem (ha marca chinesa ja produzida no Brasil, que emplaca "
+        "sem importar, e importacao da China de marcas nao chinesas); (2) ha defasagem de "
+        "~1-3 meses entre importar e emplacar; (3) o NCM 8704 mistura picapes e caminhoes."
+    )
+
+    segment_name = st.radio("Segmento", list(SEGMENT_MAP), horizontal=True)
+    mapping = SEGMENT_MAP[segment_name]
+
+    imports = (
+        filter_period(comex_prefix, period)
+        .query("ncm_prefixo_consulta in @mapping['comex']")
+        .groupby("ano_mes", as_index=False)["quantidade_veiculos"]
+        .sum()
+        .rename(columns={"quantidade_veiculos": "importacao"})
+    )
+    regs = (
+        filter_period(anfavea_segment, period)
+        .query("vehicle_group in @mapping['anfavea']")
+        .groupby("ano_mes", as_index=False)
+        .agg(emplacamento=("emplacamentos", "sum"), emplacamento_min=("emplacamentos_chinesas_min", "sum"))
+    )
+    channel = imports.merge(regs, on="ano_mes", how="outer").fillna(0).sort_values("ano_mes")
+    channel[["importacao", "emplacamento", "emplacamento_min"]] = channel[
+        ["importacao", "emplacamento", "emplacamento_min"]
+    ].astype(int)
+    channel["gap_mensal"] = channel["importacao"] - channel["emplacamento"]
+    channel["estoque_acumulado"] = channel["gap_mensal"].cumsum()
+
+    if channel.empty:
+        st.info("Sem dados no periodo selecionado.")
+    else:
+        c1, c2, c3, c4 = st.columns(4)
+        c1.metric("Importado (unid.)", br_int(channel["importacao"].sum()))
+        c2.metric("Emplacado (estimativa)", br_int(channel["emplacamento"].sum()))
+        c3.metric(
+            "Saldo acum. (imp - empl)",
+            br_int(channel["estoque_acumulado"].iloc[-1]),
+        )
+        taxa = (
+            channel["emplacamento"].sum() / channel["importacao"].sum()
+            if channel["importacao"].sum()
+            else 0
+        )
+        c4.metric("Emplacado / importado", f"{taxa * 100:.0f}%")
+
+        st.caption(
+            "Leitura do saldo acumulado: **positivo e crescente** = importacao a frente das "
+            "vendas, estoque acumulando (ex.: automoveis em 2026, front-loading antes do "
+            "imposto). **Negativo** = emplacamento a frente da importacao direta, sinal de "
+            "producao local / montagem CKD no Brasil (ex.: caminhoes e comerciais leves, "
+            "onde marcas como Effa, Shineray e JAC montam localmente) ou venda de estoque "
+            "anterior. Para automoveis antes de 2026, o emplacamento usa o proxy \"Outras "
+            "empresas\", que inclui algumas marcas nao chinesas e infla a serie."
+        )
+
+        flow = channel.melt(
+            id_vars="ano_mes",
+            value_vars=["importacao", "emplacamento"],
+            var_name="serie",
+            value_name="unidades",
+        )
+        flow["serie"] = flow["serie"].map(
+            {"importacao": "Importacao (Comex)", "emplacamento": "Emplacamento (ANFAVEA)"}
+        )
+        st.plotly_chart(
+            px.line(
+                flow,
+                x="ano_mes",
+                y="unidades",
+                color="serie",
+                markers=True,
+                labels={"ano_mes": "Mes", "unidades": "Unidades", "serie": ""},
+                title="Fluxo mensal: entra (importacao) x sai (emplacamento)",
+            ),
+            use_container_width=True,
+        )
+        st.plotly_chart(
+            px.area(
+                channel,
+                x="ano_mes",
+                y="estoque_acumulado",
+                labels={"ano_mes": "Mes", "estoque_acumulado": "Saldo acumulado (imp - empl)"},
+                title="Saldo acumulado: importacao menos emplacamento (proxy de estoque no canal)",
+            ),
+            use_container_width=True,
+        )
+
+        if segment_name.startswith("Carga"):
+            truck_split = (
+                filter_period(anfavea_segment, period)
+                .query("vehicle_group in @mapping['anfavea']")
+                .groupby(["ano_mes", "vehicle_group"], as_index=False)["emplacamentos"]
+                .sum()
+            )
+            st.plotly_chart(
+                px.bar(
+                    truck_split,
+                    x="ano_mes",
+                    y="emplacamentos",
+                    color="vehicle_group",
+                    labels={"ano_mes": "Mes", "emplacamentos": "Emplacamentos", "vehicle_group": "Segmento ANFAVEA"},
+                    title="Emplacamentos chineses: caminhoes x comerciais leves",
+                ),
+                use_container_width=True,
+            )
+            st.caption(
+                "Emplacamentos chineses de caminhoes por marca (Foton, JAC, Sany, Sinotruk) "
+                "so tem detalhe a partir de 2026; antes disso a serie usa a linha agregada "
+                "\"Outras empresas\" do grupo Caminhoes, que nesse grupo e praticamente toda "
+                "chinesa - proxy confiavel."
+            )
+
+        st.dataframe(channel, use_container_width=True, hide_index=True)
+
 with tab_cpca:
     filtered_cpca = filter_period(cpca, period)
     filtered_metrics = filter_period(cpca_metrics, period)
@@ -412,6 +557,7 @@ with tab_data:
     tables = {
         "gold_anfavea_chinese_registrations_monthly": anfavea,
         "gold_anfavea_chinese_registrations_by_brand_monthly": anfavea_brand,
+        "gold_anfavea_chinese_registrations_by_segment_monthly": anfavea_segment,
         "raw_anfavea_origin_brand_monthly": con.execute(
             "select * from raw_anfavea_origin_brand_monthly order by ano_mes"
         ).df(),
