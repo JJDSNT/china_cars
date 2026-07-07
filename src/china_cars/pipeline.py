@@ -25,7 +25,7 @@ def run_pipeline() -> None:
     write_duckdb(build_all_tables())
     for layer in ("bronze", "silver", "gold"):
         run_layer(layer)
-    result = run_quality_checks()
+    result = run_quality_checks(include_manifest=False)
     write_quality_results(result)
     if result["status"] != "pass":
         raise RuntimeError("Data quality checks failed. See ops/quality/results/latest.yml.")

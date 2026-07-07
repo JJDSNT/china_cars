@@ -50,7 +50,7 @@ tests/               Testes automatizados
 - `ops/metadata/project.yml`: metadados gerais do projeto.
 - `ops/metadata/datasets.yml`: inventario dos datasets e camadas.
 - `ops/metadata/research_scope.yml`: escopo estruturado das perguntas de pesquisa.
-- `ops/metadata/brand_classification.yml`: classificacao de marcas chinesas para a ANFAVEA.
+- `ops/metadata/brand_classification.yml`: classificacao de marcas chinesas para a ANFAVEA, com `aliases` por marca (ex.: GWM ≡ Great Wall ≡ Haval) para casar as grafias do workbook anual e dos arquivos por marca.
 - `ops/lineage/lineage.yml`: relacao entre fonte, transformacao e saida.
 - `ops/quality/expectations.yml`: expectativas minimas de qualidade dos dados.
 - `ops/quality/results/latest.yml`: resultado mais recente dos testes de qualidade e integridade.
@@ -91,13 +91,20 @@ http://localhost:8501
 
 Visoes disponiveis:
 
-- ANFAVEA: evolucao mensal dos emplacamentos de marcas chinesas cobertas na base, acumulados anuais e abertura por marca.
-- Comex Stat/MDIC: importacoes originarias da China por mes, prefixo NCM e NCM completo.
-- Dados: tabelas finais `gold_` usadas no Excel e no relatorio.
+- ANFAVEA: evolucao mensal dos emplacamentos de marcas chinesas em banda piso-estimativa (ver metodologia abaixo), acumulados anuais e abertura por marca (BYD, GWM, Omoda, Caoa Chery, Geely e demais nos meses com detalhe).
+- Comex Stat/MDIC: importacoes originarias da China por mes, prefixo NCM e NCM completo, com **quantidade de veiculos** (unidades) como metrica principal e valor FOB como referencia secundaria.
+- Comparativo: veiculos importados da China (Comex) x emplacamentos de marcas chinesas (ANFAVEA), ambos em volume.
+- Dados: tabelas finais `gold_` e a raw `raw_anfavea_origin_brand_monthly`.
+
+## Metodologia (pontos-chave)
+
+- **ANFAVEA - banda piso/estimativa**: o workbook anual so abre por marca as empresas associadas; marcas chinesas como BYD e GWM ficam na linha agregada "Outras empresas". O detalhe por marca vem dos arquivos de emplacamento de importados/nacionais por empresa e marca, publicados para 2026. Por isso a serie chinesa e uma banda: `emplacamentos_chinesas_min` (piso, marcas confirmadas, exato) e `emplacamentos` (estimativa/teto, usando "Outras empresas" como proxy nos meses sem detalhe). A coluna `metodo_outras` indica a origem de cada ponto.
+- **Comex - volume em veiculos**: a metrica principal e `quantidade_veiculos`, contada apenas para NCMs de veiculos completos (8702/8703/8704/8706/87011) medidos em numero de unidades. Autopecas (8708, medidas em kg) e carrocerias (8707) entram apenas em valor FOB e peso.
+- **Arquivos rolantes**: o download reatualiza os arquivos do ano corrente (workbook ANFAVEA e CSVs do Comex), que crescem a cada divulgacao mensal.
 
 Artefatos finais:
 
 - DuckDB: `data/processed/china_cars.duckdb`
 - Excel: `outputs/excel/china_cars_outputs.xlsx`
 - Dashboard: `dashboard/app.py`
-- Relatorio: `reports/analysis_report.md`
+- Relatorio: `reports/analysis_report.md` (+ `.pdf`)

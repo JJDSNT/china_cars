@@ -1,37 +1,122 @@
+# Classificacao de marcas para o recorte "carros chineses" nos dados da ANFAVEA.
+#
+# Estrutura:
+#   brand: nome canonico usado nas tabelas gold.
+#   aliases: grafias encontradas nos arquivos ANFAVEA (workbook anual e arquivos
+#            de emplacamento de importados/nacionais por empresa e marca).
+#            O matching normaliza caixa, acentos e pontuacao.
+#   include_in_chinese_cars_scope: se entra na soma de "carros chineses".
+#
+# Fontes dos nomes: aba "IV. Emplacamento Empresa" dos workbooks anuais 2021-2026
+# e abas IMPORTADOS/NACIONAIS dos arquivos por empresa e marca de 2026.
+
 brands:
-  # Classificacao inicial para o recorte "carros chineses" nos dados da ANFAVEA.
-  # Revisar contra os nomes exatos encontrados nos arquivos brutos antes da carga final.
   - brand: BYD
+    aliases: [BYD]
     country_origin: China
     include_in_chinese_cars_scope: true
-    notes: Marca chinesa.
-  - brand: CAOA CHERY
+    notes: Marca chinesa; aparece em "Outras empresas" (nacionais e importados) nos arquivos por marca de 2026.
+  - brand: Caoa Chery
+    aliases: [Caoa Chery, Chery]
     country_origin: China
     include_in_chinese_cars_scope: true
-    notes: Marca Chery operada no Brasil pela CAOA.
-  - brand: CAOA CHANGAN
+    notes: Marca Chery operada no Brasil pela CAOA; associada ANFAVEA, aparece sob o grupo Caoa - Hyundai.
+  - brand: Caoa Changan
+    aliases: [Caoa Changan, Changan]
     country_origin: China
     include_in_chinese_cars_scope: true
-    notes: Marca Changan operada no Brasil pela CAOA; aparece nos dados ANFAVEA de 2026.
-  - brand: CHERY
-    country_origin: China
-    include_in_chinese_cars_scope: true
-    notes: Marca chinesa; pode aparecer como Chery ou Caoa Chery na fonte.
+    notes: Marca Changan operada pela CAOA; aparece nos dados ANFAVEA a partir de 2026.
   - brand: GWM
+    aliases: [GWM, Great Wall, Haval]
     country_origin: China
     include_in_chinese_cars_scope: true
-    notes: Great Wall Motor.
-  - brand: HAVAL
+    notes: Great Wall Motor; aparece como "Great Wall" em "Outras empresas" nos arquivos por marca de 2026.
+  - brand: Geely
+    aliases: [Geely]
     country_origin: China
     include_in_chinese_cars_scope: true
-    notes: Marca/submarca da GWM; confirmar nomenclatura ANFAVEA.
+    notes: Comercializada no Brasil via parceria com a Renault; aparece sob o grupo Renault desde 2025.
   - brand: JAC
+    aliases: [JAC]
     country_origin: China
     include_in_chinese_cars_scope: true
-    notes: JAC Motors.
-  - brand: LEAPMOTOR
+    notes: JAC Motors; aparece em "Outras empresas" nos arquivos por marca de 2026.
+  - brand: Leapmotor
+    aliases: [Leapmotor]
     country_origin: China
     include_in_chinese_cars_scope: true
-    notes: Marca chinesa; aparece sob grupo Stellantis/FCA nos dados ANFAVEA de 2025-2026.
+    notes: Marca chinesa; aparece sob o grupo Stellantis/FCA nos dados ANFAVEA de 2025-2026.
+  - brand: Omoda Jaecoo
+    aliases: [Omoda, Jaecoo, Omoda Jaecoo, Omoda & Jaecoo]
+    country_origin: China
+    include_in_chinese_cars_scope: true
+    notes: Marcas do grupo Chery; aparecem como "Omoda" em "Outras empresas" nos arquivos por marca de 2026.
+  - brand: GAC
+    aliases: [GAC]
+    country_origin: China
+    include_in_chinese_cars_scope: true
+    notes: Guangzhou Automobile Group.
+  - brand: Jetour
+    aliases: [Jetour]
+    country_origin: China
+    include_in_chinese_cars_scope: true
+    notes: Marca do grupo Chery.
+  - brand: MG
+    aliases: [MG]
+    country_origin: China
+    include_in_chinese_cars_scope: true
+    notes: Marca de origem britanica controlada pela SAIC (capital chines); classificada como chinesa no recorte. Revisar criterio se necessario.
+  - brand: NETA
+    aliases: [NETA]
+    country_origin: China
+    include_in_chinese_cars_scope: true
+    notes: Marca chinesa (Hozon Auto).
+  - brand: Zeekr
+    aliases: [Zeekr]
+    country_origin: China
+    include_in_chinese_cars_scope: true
+    notes: Marca premium do grupo Geely.
+  - brand: Effa
+    aliases: [Effa]
+    country_origin: China
+    include_in_chinese_cars_scope: true
+    notes: Importadora/montadora de veiculos chineses (Jinbei/DFSK) no Brasil; incluida no recorte. Revisar criterio se necessario.
+  - brand: Foton
+    aliases: [Foton]
+    country_origin: China
+    include_in_chinese_cars_scope: true
+    notes: Marca chinesa de comerciais leves e caminhoes.
+  - brand: Shineray
+    aliases: [Shineray]
+    country_origin: China
+    include_in_chinese_cars_scope: true
+    notes: Marca chinesa de comerciais leves.
+  - brand: Sany
+    aliases: [Sany]
+    country_origin: China
+    include_in_chinese_cars_scope: true
+    notes: Marca chinesa de caminhoes.
+  - brand: Sinotruk
+    aliases: [Sinotruk, Sinotruck]
+    country_origin: China
+    include_in_chinese_cars_scope: true
+    notes: Marca chinesa de caminhoes; grafada "Sinotruck" nos arquivos ANFAVEA.
+
+  # Marcas presentes em "Outras empresas" que NAO entram no recorte chines.
+  - brand: Kia
+    aliases: [Kia]
+    country_origin: Coreia do Sul
+    include_in_chinese_cars_scope: false
+    notes: Fora do recorte; listada para documentar a composicao de "Outras empresas".
+  - brand: Porsche
+    aliases: [Porsche]
+    country_origin: Alemanha
+    include_in_chinese_cars_scope: false
+    notes: Fora do recorte.
+  - brand: Volvo Automoveis
+    aliases: [Volvo Automoveis, Volvo Automóveis]
+    country_origin: Suecia
+    include_in_chinese_cars_scope: false
+    notes: Capital majoritario Geely (China), mas marca sueca; mantida fora do recorte "carros chineses". Revisar criterio se necessario.
 
 review_required: true

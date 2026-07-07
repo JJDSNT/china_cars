@@ -69,9 +69,11 @@ def main() -> None:
         anf_year = con.execute(
             """
             select ano,
-                   sum(emplacamentos) chineses,
+                   sum(emplacamentos_chinesas_min) piso,
+                   sum(emplacamentos) estimativa,
                    sum(emplacamentos_total_anfavea) total_anfavea,
-                   sum(emplacamentos)*1.0/sum(emplacamentos_total_anfavea) participacao
+                   sum(emplacamentos_chinesas_min)*1.0/sum(emplacamentos_total_anfavea) part_piso,
+                   sum(emplacamentos)*1.0/sum(emplacamentos_total_anfavea) part_estimativa
             from gold_anfavea_chinese_registrations_monthly
             group by ano
             order by ano
@@ -80,34 +82,76 @@ def main() -> None:
         comex_year = con.execute(
             """
             select ano,
-                   sum(valor_fob_usd) fob,
-                   sum(kg_liquido) kg,
-                   sum(quantidade_estatistica) qtd
+                   sum(quantidade_veiculos) veiculos,
+                   sum(valor_fob_usd) fob
             from gold_comex_china_automotive_monthly
+            group by ano
+            order by ano
+            """
+        ).fetchall()
+        comex_h1 = con.execute(
+            """
+            select ano, sum(quantidade_veiculos) veiculos
+            from gold_comex_china_automotive_monthly
+            where mes <= 6
             group by ano
             order by ano
             """
         ).fetchall()
         prefix_2026 = con.execute(
             """
-            select ncm_prefixo_consulta, sum(valor_fob_usd) fob
+            select ncm_prefixo_consulta,
+                   sum(quantidade_veiculos) veiculos,
+                   sum(valor_fob_usd) fob
             from gold_comex_china_automotive_by_prefix_monthly
             where ano = 2026
             group by 1
-            order by fob desc
+            order by veiculos desc
             """
         ).fetchall()
+        cpca_latest = con.execute(
+            """
+            select ano_mes,
+                   narrow_passenger_retail,
+                   nev_narrow_passenger_retail,
+                   nev_passenger_wholesale_estimate,
+                   nev_retail_penetration_pct
+            from gold_cpca_passenger_market_monthly
+            order by ano_mes desc
+            limit 5
+            """
+        ).fetchall()
+        caam_summary = con.execute(
+            """
+            select count(*) as articles, sum(image_count) as images,
+                   min(published_date) as min_date, max(published_date) as max_date
+            from raw_caam_evidence_catalog
+            """
+        ).fetchone()
 
-    story.append(Paragraph("ANFAVEA", styles["Heading1"]))
+    story.append(Paragraph("ANFAVEA - emplacamentos de marcas chinesas", styles["Heading1"]))
+    story.append(
+        Paragraph(
+            "Serie em banda. <b>Piso</b>: apenas marcas chinesas confirmadas nominalmente "
+            "(associadas a Anfavea e, a partir de 2026, o detalhe por marca das \"Outras "
+            "empresas\": BYD, GWM, Omoda, GAC etc.). <b>Estimativa</b>: piso mais a linha "
+            "agregada \"Outras empresas\" nos meses sem detalhe por marca - um teto, pois "
+            "essa linha inclui marcas nao chinesas (Kia, Porsche, Volvo). Nos meses de 2026 "
+            "com detalhe, ~92% de \"Outras empresas\" e chinesa.",
+            styles["BodyText"],
+        )
+    )
     story.append(
         table_from_rows(
-            ["Ano", "Emplacamentos chineses", "Total ANFAVEA", "Participacao"],
+            ["Ano", "Piso (marcas confirmadas)", "Estimativa (com Outras)", "Total ANFAVEA", "Part. piso", "Part. estimativa"],
             [
                 [
-                    "2026 jan-mai" if row[0] == 2026 else str(row[0]),
+                    "2026 jan-jun" if row[0] == 2026 else str(row[0]),
                     fmt_int(row[1]),
                     fmt_int(row[2]),
-                    fmt_pct(row[3]),
+                    fmt_int(row[3]),
+                    fmt_pct(row[4]),
+                    fmt_pct(row[5]),
                 ]
                 for row in anf_year
             ],
@@ -115,28 +159,82 @@ def main() -> None:
     )
     story.append(Spacer(1, 0.4 * cm))
 
-    story.append(Paragraph("Comex Stat/MDIC", styles["Heading1"]))
+    story.append(Paragraph("Comex Stat/MDIC - importacoes originarias da China", styles["Heading1"]))
+    story.append(
+        Paragraph(
+            "Metrica principal: <b>quantidade de veiculos</b> (unidades) dos NCMs de veiculos "
+            "completos (8702, 8703, 8704, 8706, 87011), medidos em numero de unidades. O valor "
+            "FOB e apresentado como referencia secundaria. Autopecas (8708) e carrocerias (8707) "
+            "nao entram na contagem de veiculos por serem medidas majoritariamente em quilogramas.",
+            styles["BodyText"],
+        )
+    )
     story.append(
         table_from_rows(
-            ["Ano", "Valor FOB", "Kg liquido", "Quantidade estatistica"],
+            ["Ano", "Veiculos (unidades)", "Valor FOB (referencia)"],
             [
                 [
                     "2026 jan-jun" if row[0] == 2026 else str(row[0]),
-                    fmt_usd(row[1]),
-                    fmt_int(row[2]),
-                    fmt_int(row[3]),
+                    fmt_int(row[1]),
+                    fmt_usd(row[2]),
                 ]
                 for row in comex_year
             ],
         )
     )
+    story.append(Spacer(1, 0.2 * cm))
+    story.append(
+        Paragraph(
+            "Acumulado janeiro-junho, em veiculos: "
+            + "; ".join(f"{row[0]} = {fmt_int(row[1])}" for row in comex_h1)
+            + ".",
+            styles["BodyText"],
+        )
+    )
     story.append(Spacer(1, 0.4 * cm))
 
-    story.append(Paragraph("Principais prefixos NCM em 2026", styles["Heading1"]))
+    story.append(Paragraph("CPCA", styles["Heading1"]))
+    story.append(
+        Paragraph(
+            "Metricas textuais extraidas de artigos mensais da CPCA para varejo de passageiros, "
+            "NEV e estimativas de atacado quando publicadas.",
+            styles["BodyText"],
+        )
+    )
     story.append(
         table_from_rows(
-            ["Prefixo NCM", "Valor FOB"],
-            [[row[0], fmt_usd(row[1])] for row in prefix_2026],
+            ["Mes", "Varejo passageiros", "Varejo NEV", "Atacado NEV estimado", "Penetracao NEV"],
+            [
+                [
+                    row[0],
+                    fmt_int(row[1]) if row[1] is not None else "-",
+                    fmt_int(row[2]) if row[2] is not None else "-",
+                    fmt_int(row[3]) if row[3] is not None else "-",
+                    f"{row[4]:.1f}%" if row[4] is not None else "-",
+                ]
+                for row in reversed(cpca_latest)
+            ],
+        )
+    )
+    story.append(Spacer(1, 0.4 * cm))
+
+    story.append(Paragraph("CAAM", styles["Heading1"]))
+    story.append(
+        Paragraph(
+            f"Foram catalogados {int(caam_summary[0] or 0)} comunicados CAAM, "
+            f"com {int(caam_summary[1] or 0)} imagens brutas, entre "
+            f"{caam_summary[2]} e {caam_summary[3]}. Os numeros em imagens ficam "
+            "preservados para OCR ou transcricao controlada.",
+            styles["BodyText"],
+        )
+    )
+    story.append(Spacer(1, 0.4 * cm))
+
+    story.append(Paragraph("Principais prefixos NCM em 2026 (jan-jun)", styles["Heading1"]))
+    story.append(
+        table_from_rows(
+            ["Prefixo NCM", "Veiculos (unidades)", "Valor FOB (referencia)"],
+            [[row[0], fmt_int(row[1]), fmt_usd(row[2])] for row in prefix_2026],
         )
     )
     story.append(Spacer(1, 0.4 * cm))
@@ -144,7 +242,12 @@ def main() -> None:
     story.append(Paragraph("Limitacoes", styles["Heading1"]))
     for text in [
         "A ANFAVEA nao disponibiliza estatisticas detalhadas por modelo; o recorte usa marca/empresa.",
-        "O Comex foi tratado como importacoes originarias da China.",
+        "Para 2021-2025, marcas chinesas como BYD e GWM aparecem apenas na linha agregada "
+        "\"Outras empresas\" do workbook anual (sem detalhe por marca), o que gera a banda "
+        "piso-estimativa. O detalhe por marca so esta disponivel nos arquivos de importados/"
+        "nacionais por marca, publicados para 2026.",
+        "O Comex foi tratado como importacoes originarias da China; a quantidade de veiculos "
+        "considera apenas NCMs de veiculos completos medidos em numero de unidades.",
         "O codigo 87011 foi tratado como prefixo de NCM e permanece pendente de validacao metodologica.",
         "Os dados brutos foram versionados via Git LFS quando disponivel e registrados no manifesto SHA256.",
     ]:
@@ -164,4 +267,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

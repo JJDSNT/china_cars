@@ -11,68 +11,109 @@ Este relatorio responde a duas perguntas de pesquisa:
 
 ## Resultados ANFAVEA
 
-Cobertura obtida: janeiro de 2021 a maio de 2026.
+Cobertura obtida: janeiro de 2021 a junho de 2026.
 
-O recorte de marcas chinesas identificado nos arquivos anuais ANFAVEA inclui `Caoa Chery`, `Caoa Changan` e `Leapmotor`, conforme classificacao em `ops/metadata/brand_classification.yml`.
+O recorte de marcas chinesas cobre BYD, GWM (Great Wall/Haval), Caoa Chery, Caoa Changan, Geely, Leapmotor, Omoda/Jaecoo, GAC, Jetour, MG, NETA, Zeekr, JAC, Effa, Foton, Shineray, Sany e Sinotruk, conforme `ops/metadata/brand_classification.yml`.
 
-| Ano | Emplacamentos chineses | Total ANFAVEA | Participacao |
-| --- | ---: | ---: | ---: |
-| 2021 | 39.747 | 2.119.851 | 1,88% |
-| 2022 | 35.034 | 2.104.460 | 1,66% |
-| 2023 | 31.480 | 2.308.689 | 1,36% |
-| 2024 | 60.933 | 2.634.904 | 2,31% |
-| 2025 | 72.031 | 2.689.634 | 2,68% |
-| 2026, jan-mai | 34.183 | 1.148.201 | 2,98% |
+A serie e apresentada em **banda**, por limitacao da fonte:
 
-Comparacao acumulada janeiro-maio:
+- **Piso**: apenas marcas chinesas identificadas nominalmente. Isso inclui as marcas associadas a Anfavea (Caoa Chery, Geely, Leapmotor etc.) em todo o periodo e, a partir de 2026, o detalhe por marca das "Outras empresas" (BYD, GWM, Omoda, GAC, ...), disponivel nos arquivos de emplacamento de importados/nacionais por empresa e marca.
+- **Estimativa (teto)**: piso mais a linha agregada "Outras empresas" do workbook anual nos meses sem detalhe por marca. E um teto porque essa linha inclui algumas marcas nao chinesas (Kia, Porsche, Volvo). Nos meses de 2026 com detalhe, cerca de 92% de "Outras empresas" e chinesa.
 
-| Ano | Emplacamentos chineses | Total ANFAVEA | Participacao |
-| --- | ---: | ---: | ---: |
-| 2025, jan-mai | 23.516 | 986.157 | 2,38% |
-| 2026, jan-mai | 34.183 | 1.148.201 | 2,98% |
+Para 2021-2023 a verdade esta proxima do piso (BYD e GWM ainda nao tinham escala no Brasil); para 2024-2026 sobe em direcao ao teto.
 
-Entre janeiro-maio de 2025 e janeiro-maio de 2026, o recorte de marcas chinesas coberto nos arquivos anuais ANFAVEA cresceu 45,4% em unidades emplacadas.
+| Ano | Piso (marcas confirmadas) | Estimativa (com Outras) | Total ANFAVEA | Part. piso | Part. estimativa |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 2021 | 39.747 | 60.959 | 2.119.851 | 1,87% | 2,88% |
+| 2022 | 35.034 | 53.700 | 2.104.460 | 1,66% | 2,55% |
+| 2023 | 31.480 | 83.210 | 2.308.689 | 1,36% | 3,60% |
+| 2024 | 60.933 | 193.319 | 2.634.904 | 2,31% | 7,34% |
+| 2025 | 75.399 | 271.300 | 2.689.634 | 2,80% | 10,09% |
+| 2026, jan-jun | 98.729 | 235.030 | 1.420.675 | 6,95% | 16,54% |
+
+Detalhe por marca disponivel (jan-fev de 2026, "Outras empresas" abertas): BYD lidera com 21.481 emplacamentos no bimestre, seguida por GWM (9.314), Caoa Chery (6.949), Omoda/Jaecoo (3.522), Geely (1.759) e GAC (1.176). Em janeiro de 2026, o conjunto de marcas chinesas atingiu ~22,9 mil emplacamentos, ou 13,4% do mercado ANFAVEA no mes.
+
+Nota sobre a versao anterior: o recorte antigo cobria apenas Caoa Chery, Caoa Changan e Leapmotor e omitia BYD, GWM e demais marcas dentro de "Outras empresas", subestimando o volume chines por um fator de aproximadamente cinco vezes nos meses recentes.
 
 ## Resultados Comex Stat/MDIC
 
 Cobertura obtida: importacoes, China como pais de origem, janeiro de 2021 a junho de 2026.
 
-| Ano | Valor FOB US$ | Kg liquido | Quantidade estatistica |
-| --- | ---: | ---: | ---: |
-| 2021 | 1.040.835.786 | 185.868.583 | 197.192.638 |
-| 2022 | 1.298.117.388 | 211.949.624 | 216.565.513 |
-| 2023 | 2.173.194.020 | 290.418.564 | 244.714.303 |
-| 2024 | 4.692.243.885 | 541.046.581 | 307.354.368 |
-| 2025 | 5.075.023.114 | 678.815.489 | 340.532.974 |
-| 2026, jan-jun | 6.822.602.065 | 839.102.821 | 254.411.745 |
+Metrica principal: **quantidade de veiculos** (unidades) dos NCMs de veiculos completos (8702, 8703, 8704, 8706, 87011), medidos em numero de unidades. O valor FOB entra como referencia secundaria. Autopecas (8708) e carrocerias (8707) nao entram na contagem de veiculos porque sao medidas majoritariamente em quilogramas — somar sua "quantidade estatistica" a de veiculos produzia um numero sem sentido fisico (era o caso da versao anterior).
 
-Comparacao acumulada janeiro-junho:
+| Ano | Veiculos (unidades) | Valor FOB US$ (referencia) |
+| --- | ---: | ---: |
+| 2021 | 44.949 | 1.040.835.786 |
+| 2022 | 19.611 | 1.298.117.388 |
+| 2023 | 61.609 | 2.173.194.020 |
+| 2024 | 181.309 | 4.692.243.885 |
+| 2025 | 255.720 | 5.075.023.114 |
+| 2026, jan-jun | 401.324 | 6.822.602.065 |
 
-| Ano | Valor FOB US$ | Kg liquido | Quantidade estatistica |
-| --- | ---: | ---: | ---: |
-| 2025, jan-jun | 2.852.522.090 | 360.997.407 | 167.965.122 |
-| 2026, jan-jun | 6.822.602.065 | 839.102.821 | 254.411.745 |
+Comparacao acumulada janeiro-junho, em veiculos:
 
-O valor FOB importado no recorte cresceu 139,2% no acumulado janeiro-junho de 2026 contra janeiro-junho de 2025.
-
-Principais prefixos em 2026, janeiro-junho:
-
-| Prefixo NCM | Valor FOB US$ |
+| Ano | Veiculos (unidades) |
 | --- | ---: |
-| 8703 | 5.608.528.247 |
-| 8708 | 1.014.451.083 |
-| 8704 | 178.061.098 |
-| 8702 | 12.472.228 |
-| 8707 | 6.103.850 |
-| 87011 | 2.805.681 |
-| 8706 | 179.878 |
+| 2025, jan-jun | 145.633 |
+| 2026, jan-jun | 401.324 |
+
+O volume de veiculos importados da China no acumulado janeiro-junho quase triplicou (crescimento de 175,6%) de 2025 para 2026.
+
+Principais prefixos em 2026, janeiro-junho, por quantidade de veiculos:
+
+| Prefixo NCM | Veiculos (unidades) | Valor FOB US$ (referencia) |
+| --- | ---: | ---: |
+| 8703 (automoveis de passageiros) | 384.681 | 5.608.528.247 |
+| 87011 (tratores) | 8.615 | 2.805.681 |
+| 8704 (veiculos de carga) | 7.895 | 178.061.098 |
+| 8702 (transporte coletivo) | 102 | 12.472.228 |
+| 8706 (chassis) | 31 | 179.878 |
+| 8707 (carrocerias) | 0 | 6.103.850 |
+| 8708 (autopecas) | 0 | 1.014.451.083 |
+
+## Evidencias CPCA e CAAM
+
+As fontes chinesas foram integradas como evidencias validas para confirmar, contrastar ou contextualizar os resultados principais.
+
+### CPCA
+
+Fonte: China Passenger Car Association / China Automobile Dealers Association Passenger Car Market Information Joint Branch.
+
+Cobertura estruturada extraida: fevereiro de 2021 a junho de 2026.
+
+Foram extraidas 203 metricas textuais de artigos mensais da CPCA, incluindo varejo de automoveis de passageiros, varejo NEV, segmentos sedan/MPV/SUV, penetracao NEV quando publicada e estimativa de atacado NEV.
+
+Ultimos pontos disponiveis:
+
+| Mes | Varejo passageiros | Varejo NEV | Atacado NEV estimado | Penetracao NEV |
+| --- | ---: | ---: | ---: | ---: |
+| 2026-02 | 1.034.000 | 464.000 | - | - |
+| 2026-03 | 1.648.000 | 848.000 | - | - |
+| 2026-04 | 1.384.000 | 849.000 | - | - |
+| 2026-05 | 1.510.000 | 950.000 | - | 62,9% |
+| 2026-06 | - | - | 1.510.000 | - |
+
+Uso analitico:
+
+- A CPCA ajuda a validar a direcao do mercado chines de passageiros e NEV.
+- A serie nao e equivalente a emplacamentos brasileiros; deve ser usada para acuracia contextual e comparacao de tendencias, salvo quando houver recorte diretamente compativel com a pergunta.
+- A propria CPCA distingue varejo, atacado e exportacao; essa distincao foi preservada no pipeline.
+
+### CAAM
+
+Fonte: China Association of Automobile Manufacturers.
+
+Cobertura coletada: 13 comunicados estatisticos entre fevereiro e agosto de 2025, com 49 imagens brutas associadas.
+
+Os comunicados CAAM foram preservados no catalogo `raw_caam_evidence_catalog`. Nesta versao, os numeros dos comunicados CAAM ainda nao foram extraidos para serie estruturada porque os dados coletados estao publicados majoritariamente como imagens. Eles ficam disponiveis para OCR ou transcricao controlada em etapa posterior.
 
 ## Limitacoes e decisoes metodologicas
 
 - A ANFAVEA informa que nao disponibiliza estatisticas de autoveiculos detalhadas por modelo. O recorte de carros chineses foi feito por marca/empresa.
-- Os arquivos anuais ANFAVEA usados no pipeline cobrem as marcas chinesas que aparecem nas abas de emplacamento por empresa. Marcas chinesas fora dessa estrutura anual podem exigir os arquivos especificos por importados/nacionais por marca para todos os anos, que nao estavam publicamente expostos na pagina HTML para 2021-2025 no momento da coleta.
-- No Comex Stat, a entrega principal foi feita para importacoes do Brasil originarias da China. Exportacoes nao foram misturadas ao resultado principal porque a pergunta nao especificou o fluxo.
-- O codigo `87011` foi tratado como prefixo de NCM. Esse ponto permanece marcado para validacao metodologica, pois NCM operacional possui 8 digitos.
+- Marcas chinesas como BYD, GWM e Omoda aparecem no workbook anual apenas dentro da linha agregada "Outras empresas", sem abertura por marca. O detalhe por marca so existe nos arquivos de emplacamento de importados/nacionais por empresa e marca, publicamente expostos para 2026 no momento da coleta. Por isso a serie chinesa e apresentada como banda piso-estimativa: o piso e exato, e a estimativa usa a linha "Outras empresas" como teto nos meses sem detalhe. Para fechar a serie por marca de 2021 a 2025 seria necessario obter esses arquivos por marca para os anos anteriores (ou uma fonte complementar como a Fenabrave, que publica emplacamentos mensais por marca).
+- No Comex Stat, a entrega principal foi feita para importacoes do Brasil originarias da China. A quantidade de veiculos considera apenas NCMs de veiculos completos medidos em numero de unidades (unidade estatistica 11); autopecas e carrocerias entram apenas nas metricas de valor FOB e peso. Exportacoes nao foram misturadas ao resultado principal porque a pergunta nao especificou o fluxo.
+- O codigo `87011` foi tratado como prefixo de NCM (capturando 8701.1, tratores de eixo simples). Esse ponto permanece marcado para validacao metodologica: se a intencao era caminhoes-trator (cavalos-mecanicos), o codigo correto seria 8701.2. NCM operacional possui 8 digitos.
+- CPCA e CAAM sao fontes validas de evidencia; sua funcao analitica depende da compatibilidade entre indicador, recorte geografico, periodo e definicao operacional.
 - Os valores podem ser revisados pelas fontes oficiais.
 
 ## Entregaveis
@@ -81,9 +122,12 @@ Principais prefixos em 2026, janeiro-junho:
 - Excel: `outputs/excel/china_cars_outputs.xlsx`
 - Dashboard: `dashboard/app.py`
 - Tabelas finais:
-  - `gold_anfavea_chinese_registrations_monthly`
-  - `gold_anfavea_chinese_registrations_by_brand_monthly`
+  - `gold_anfavea_chinese_registrations_monthly` (serie mensal com banda piso/estimativa)
+  - `gold_anfavea_chinese_registrations_by_brand_monthly` (detalhe por marca, inclui BYD/GWM/Omoda em 2026)
+  - `raw_anfavea_origin_brand_monthly` (emplacamentos por empresa e marca, importados/nacionais)
   - `gold_comex_china_automotive_monthly`
   - `gold_comex_china_automotive_by_prefix_monthly`
   - `gold_comex_china_automotive_by_ncm_monthly`
-
+  - `gold_cpca_passenger_market_monthly`
+  - `raw_cpca_article_metrics`
+  - `raw_caam_evidence_catalog`
