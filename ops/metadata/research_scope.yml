@@ -1,4 +1,7 @@
 research_scope:
+  primary_focus: >-
+    Caminhoes (veiculos de carga). Automoveis, motocicletas e onibus entram por
+    completude do universo automotivo, mas a leitura central e a de caminhoes.
   questions:
     - id: anfavea_chinese_registrations
       source: ANFAVEA
@@ -9,6 +12,7 @@ research_scope:
       output_tables:
         - gold_anfavea_chinese_registrations_monthly
         - gold_anfavea_chinese_registrations_by_brand_monthly
+        - gold_anfavea_chinese_registrations_by_segment_monthly
     - id: comex_china_automotive
       source: Comex Stat/MDIC
       period_start: 2021-01
@@ -23,10 +27,24 @@ research_scope:
         - "8707"
         - "8708"
         - "8711"
+        - "87012"
+      output_tables:
+        - gold_comex_china_automotive_monthly
+        - gold_comex_china_automotive_by_prefix_monthly
+        - gold_comex_china_automotive_by_ncm_monthly
       resolved_items:
         - >-
           O codigo era "8711" (motocicletas). A grafia inicial "87011" foi confirmada
           pelo solicitante como erro de digitacao.
+        - >-
+          Prefixo "87012" (cavalos-mecanicos / caminhoes-trator, 8701.2x) adicionado
+          por completude da definicao de caminhao. O 8701 inteiro foi deixado de fora
+          (trator agricola 8701.9x e motocultivador 8701.10 estao fora de escopo, e
+          870130 tem anomalia de reporte em 2023). Importacao chinesa de cavalos-mecanicos
+          e desprezivel (219 unidades em 2021-2026).
+        - >-
+          O NCM 8704 foi classificado por classe de peso (coluna classe_carga) para
+          separar caminhao pesado (> 5 t) de comercial leve (<= 5 t).
       unresolved_items:
         - Confirmar se o fluxo desejado e importacao, exportacao ou ambos.
   evidence_sources:

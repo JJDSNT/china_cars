@@ -89,17 +89,20 @@ Depois de iniciar, acesse:
 http://localhost:8501
 ```
 
+> **Foco principal: caminhoes.** Os demais segmentos entram por completude; a leitura central e a de veiculos de carga.
+
 Visoes disponiveis:
 
 - ANFAVEA: evolucao mensal dos emplacamentos de marcas chinesas em banda piso-estimativa (ver metodologia abaixo), acumulados anuais e abertura por marca (BYD, GWM, Omoda, Caoa Chery, Geely e demais nos meses com detalhe).
-- Comex Stat/MDIC: importacoes originarias da China por mes, prefixo NCM e NCM completo, com **quantidade de veiculos** (unidades) como metrica principal e valor FOB como referencia secundaria.
-- Comparativo: veiculos importados da China (Comex) x emplacamentos de marcas chinesas (ANFAVEA), ambos em volume.
+- Comex Stat/MDIC: importacoes originarias da China por mes, prefixo NCM e NCM completo, com **quantidade de veiculos** (unidades) como metrica principal e valor FOB como referencia secundaria. A dimensao **classe de carga** separa o 8704 em leve (<= 5 t) vs caminhoes (> 5 t), dumpers e cavalos-mecanicos.
+- Estoque no canal: veiculos importados da China (Comex) x emplacamentos de marcas chinesas (ANFAVEA), ambos em volume, com **"Caminhoes (pesados > 5t)"** como segmento padrao.
 - Dados: tabelas finais `gold_` e a raw `raw_anfavea_origin_brand_monthly`.
 
 ## Metodologia (pontos-chave)
 
 - **ANFAVEA - banda piso/estimativa**: o workbook anual so abre por marca as empresas associadas; marcas chinesas como BYD e GWM ficam na linha agregada "Outras empresas". O detalhe por marca vem dos arquivos de emplacamento de importados/nacionais por empresa e marca, publicados para 2026. Por isso a serie chinesa e uma banda: `emplacamentos_chinesas_min` (piso, marcas confirmadas, exato) e `emplacamentos` (estimativa/teto, usando "Outras empresas" como proxy nos meses sem detalhe). A coluna `metodo_outras` indica a origem de cada ponto.
-- **Comex - volume em veiculos**: a metrica principal e `quantidade_veiculos`, contada apenas para NCMs de veiculos completos (8702/8703/8704/8706/8711) medidos em numero de unidades. **8711 sao motocicletas**, que dominam o volume e devem ser lidas separadamente dos automoveis (8703). Autopecas (8708, medidas em kg) e carrocerias (8707) entram apenas em valor FOB e peso.
+- **Comex - volume em veiculos**: a metrica principal e `quantidade_veiculos`, contada apenas para NCMs de veiculos completos (8702/8703/8704/8706/8711/87012) medidos em numero de unidades. **8711 sao motocicletas**, que dominam o volume e devem ser lidas separadamente dos automoveis (8703). Autopecas (8708, medidas em kg) e carrocerias (8707) entram apenas em valor FOB e peso.
+- **Foco em caminhoes (8701/8704)**: o 8704 e classificado por classe de peso (`classe_carga`) para isolar o caminhao pesado (> 5 t) do comercial leve (<= 5 t). Do 8701 entra apenas o subconjunto `87012` (cavalos-mecanicos / caminhoes-trator), por completude — o 8701 inteiro traria trator agricola e motocultivador (fora de escopo) e uma anomalia de reporte em 870130 no ano de 2023. A importacao chinesa de cavalos-mecanicos e desprezivel (219 unidades em 2021-2026).
 - **Arquivos rolantes**: o download reatualiza os arquivos do ano corrente (workbook ANFAVEA e CSVs do Comex), que crescem a cada divulgacao mensal.
 
 Artefatos finais:

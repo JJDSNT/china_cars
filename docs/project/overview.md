@@ -37,6 +37,16 @@ Filtros iniciais:
 - Periodo: 2021-01 a 2026-06.
 - Codigos informados: `8702`, `8703`, `8704`, `8706`, `8707`, `8708`, `8711` (a grafia inicial `87011` era erro de digitacao, confirmado pelo solicitante).
 
+## Foco principal
+
+O **foco principal da analise sao os caminhoes** (veiculos de carga). Automoveis, motocicletas
+e onibus entram por completude do universo automotivo, mas a leitura central e a de caminhoes.
+Para isolar o caminhao pesado, o NCM `8704` e classificado por classe de peso (`classe_carga`:
+leve <= 5 t vs caminhoes > 5 t, dumpers e cavalos-mecanicos), e o prefixo `87012`
+(cavalos-mecanicos / caminhoes-trator, 8701.2x) e incluido por completude da definicao de
+caminhao. O `8701` inteiro nao entra: fora o 8701.2, e trator agricola e motocultivador (fora
+de escopo), alem de uma anomalia de reporte em 870130 no ano de 2023.
+
 ## Escopo
 
 - Fontes incluidas: ANFAVEA e Comex Stat/MDIC.
@@ -65,6 +75,10 @@ Nos arquivos da ANFAVEA, a nomenclatura recente alterna entre emplacamento e lic
 O codigo informado originalmente como `87011` era erro de digitacao; o solicitante confirmou que o pretendido e `8711` (motocicletas, incluindo ciclomotores). Todos os prefixos ficam entao em posicoes de 4 digitos: `8702`, `8703`, `8704`, `8706`, `8707`, `8708` e `8711`, casados contra os NCMs completos de 8 digitos iniciados por cada prefixo.
 
 Observacao analitica: motocicletas dominam o volume importado da China e formam um mercado distinto do de automoveis. Por isso o total de "veiculos" e sempre apresentado aberto por prefixo, permitindo separar automoveis (`8703`) de motos (`8711`).
+
+### Prefixo `87012` (cavalos-mecanicos)
+
+Alem dos prefixos informados, o projeto inclui o prefixo de consulta `87012` (subposicao `8701.2x`: cavalos-mecanicos / caminhoes-trator), por completude da definicao de caminhao — o unico subconjunto do `8701` relevante para carga. O `8701` inteiro nao entra: 8701.9x e trator agricola e 8701.10 e motocultivador (ambos fora de escopo), e 870130 tem uma anomalia de reporte de ~90 mil unidades em 2023. A importacao chinesa de cavalos-mecanicos e desprezivel (219 unidades em toda a serie).
 
 ## Entregaveis
 

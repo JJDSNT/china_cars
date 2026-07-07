@@ -1,5 +1,8 @@
 # Perguntas de Pesquisa
 
+> **Foco principal:** caminhoes (veiculos de carga). Os demais segmentos entram por
+> completude, mas a leitura central e a de caminhoes.
+
 ## I. Emplacamentos de carros chineses
 
 Pergunta:
@@ -17,6 +20,7 @@ Tabelas finais previstas:
 
 - `gold_anfavea_chinese_registrations_monthly`
 - `gold_anfavea_chinese_registrations_by_brand_monthly`
+- `gold_anfavea_chinese_registrations_by_segment_monthly`
 
 ## II. Comercio exterior automotivo Brasil-China
 
@@ -35,14 +39,16 @@ Resposta esperada:
 Tabelas finais previstas:
 
 - `gold_comex_china_automotive_monthly`
-- `gold_comex_china_automotive_by_ncm_monthly`
+- `gold_comex_china_automotive_by_prefix_monthly`
+- `gold_comex_china_automotive_by_ncm_monthly` (inclui `classe_carga` do 8704)
 
 ## Pendencias metodologicas
 
 - Confirmar se o fluxo Comex Stat desejado e importacao, exportacao ou ambos.
 - Codigo `8711` (motocicletas) confirmado pelo solicitante; a grafia `87011` na pergunta original era erro de digitacao.
+- Prefixo `87012` (cavalos-mecanicos, 8701.2x) adicionado por completude da definicao de caminhao; 8701 inteiro fica de fora (trator agricola/motocultivador fora de escopo + anomalia em 870130 no ano de 2023). Importacao chinesa de cavalos-mecanicos e desprezivel.
 - Definir a lista oficial de marcas chinesas para classificar os dados da ANFAVEA.
-- Definir se "carros" inclui apenas automoveis ou tambem comerciais leves, caminhões e ônibus.
+- Foco confirmado em caminhoes; demais segmentos por completude. O 8704 e classificado por classe de peso (`classe_carga`) para isolar o caminhao pesado (> 5 t) do comercial leve (<= 5 t).
 
 ## Fontes chinesas para evidencia e validacao
 

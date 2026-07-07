@@ -27,11 +27,20 @@ PREFIX_LABELS = {
     "8707": "Carrocerias (8707)",
     "8708": "Autopecas (8708)",
     "8711": "Motocicletas (8711)",
+    "87012": "Cavalos-mecanicos (8701.2)",
+}
+CARGO_CLASS_LABELS = {
+    "leve_ate_5t": "Comerciais leves (<= 5 t)",
+    "pesado_acima_5t": "Caminhoes (> 5 t)",
+    "dumper_fora_estrada": "Fora-de-estrada / dumpers",
+    "cavalo_mecanico": "Cavalos-mecanicos",
+    "outros_carga": "Carga (outros/nao classificado)",
 }
 DIMENSION_LABELS = {
     "tipo_ncm": "Tipo (prefixo NCM)",
     "ncm_prefixo_consulta": "Tipo (prefixo NCM)",
     "codigo_ncm": "NCM completo (8 digitos)",
+    "classe_carga_label": "Classe de carga (8704 + cavalo-mecanico)",
     "ano": "Ano",
     "ano_mes": "Mes",
 }
@@ -47,16 +56,20 @@ def prefix_label(code: str) -> str:
     return PREFIX_LABELS.get(str(code), str(code))
 
 
-# Correspondencia entre segmentos ANFAVEA (emplacamentos) e prefixos NCM
-# (importacao). 8704 (carga) cobre picapes e caminhoes, entao casa com
-# "Comerciais leves + Caminhoes" da ANFAVEA; nao isola caminhoes puros.
+# Correspondencia entre segmentos ANFAVEA (emplacamentos) e o Comex (importacao).
+# "Caminhoes (pesados)" isola o 8704 acima de 5 t (+ dumpers e cavalos-mecanicos)
+# pela classe de carga; "Carga total" usa o 8704 inteiro (picapes + caminhoes).
 SEGMENT_MAP = {
-    "Carga - comerciais e caminhoes": {
-        "anfavea": ["Comerciais leves", "Caminhões"],
-        "comex": ["8704"],
+    "Caminhoes (pesados > 5t)": {
+        "anfavea": ["Caminhões"],
+        "comex_classe": ["pesado_acima_5t", "dumper_fora_estrada", "cavalo_mecanico"],
     },
-    "Automoveis": {"anfavea": ["Automóveis"], "comex": ["8703"]},
-    "Onibus": {"anfavea": ["Ônibus"], "comex": ["8702"]},
+    "Carga total (comerciais + caminhoes)": {
+        "anfavea": ["Comerciais leves", "Caminhões"],
+        "comex_prefix": ["8704", "87012"],
+    },
+    "Automoveis": {"anfavea": ["Automóveis"], "comex_prefix": ["8703"]},
+    "Onibus": {"anfavea": ["Ônibus"], "comex_prefix": ["8702"]},
 }
 
 
@@ -219,7 +232,10 @@ with tab_comex:
         tipo_ncm=filtered_prefix["ncm_prefixo_consulta"].map(prefix_label)
     )
     filtered_ncm = filtered_ncm.assign(
-        tipo_ncm=filtered_ncm["ncm_prefixo_consulta"].map(prefix_label)
+        tipo_ncm=filtered_ncm["ncm_prefixo_consulta"].map(prefix_label),
+        classe_carga_label=filtered_ncm["classe_carga"].map(
+            lambda c: CARGO_CLASS_LABELS.get(c, "Sem classe (nao-carga)")
+        ),
     )
 
     prefixes = sorted(filtered_prefix["ncm_prefixo_consulta"].unique().tolist())
@@ -235,12 +251,13 @@ with tab_comex:
         "Metrica principal: **quantidade de veiculos** (NCMs de veiculos completos "
         "8702/8703/8704/8706/8711, medidos em numero de unidades). **8711 = motocicletas**, "
         "que dominam o volume; use o filtro de tipo para separar automoveis de motos. "
-        "Valor FOB e kg ficam como metricas secundarias. Autopecas (8708) e carrocerias "
-        "(8707) nao entram na contagem de veiculos."
+        "A dimensao **classe de carga** separa o 8704 em leve (<= 5 t) vs caminhoes (> 5 t), "
+        "dumpers e cavalos-mecanicos. Valor FOB e kg ficam como metricas secundarias. "
+        "Autopecas (8708) e carrocerias (8707) nao entram na contagem de veiculos."
     )
     dimension = st.selectbox(
         "Dimensao",
-        ["tipo_ncm", "codigo_ncm", "ano", "ano_mes"],
+        ["tipo_ncm", "codigo_ncm", "classe_carga_label", "ano", "ano_mes"],
         format_func=lambda col: DIMENSION_LABELS.get(col, col),
     )
     measure = st.selectbox(
@@ -248,7 +265,11 @@ with tab_comex:
         ["quantidade_veiculos", "valor_fob_usd", "kg_liquido", "quantidade_estatistica"],
         format_func=lambda col: MEASURE_LABELS.get(col, col),
     )
-    source = filtered_ncm if dimension == "codigo_ncm" else filtered_prefix
+    source = (
+        filtered_ncm
+        if dimension in ("codigo_ncm", "classe_carga_label")
+        else filtered_prefix
+    )
     measure_label = MEASURE_LABELS.get(measure, measure)
 
     c1, c2, c3, c4 = st.columns(4)
@@ -325,10 +346,16 @@ with tab_estoque:
     segment_name = st.radio("Segmento", list(SEGMENT_MAP), horizontal=True)
     mapping = SEGMENT_MAP[segment_name]
 
+    if "comex_classe" in mapping:
+        classes = mapping["comex_classe"]
+        imports_source = filter_period(comex_ncm, period).query("classe_carga in @classes")
+    else:
+        prefixes_sel = mapping["comex_prefix"]
+        imports_source = filter_period(comex_prefix, period).query(
+            "ncm_prefixo_consulta in @prefixes_sel"
+        )
     imports = (
-        filter_period(comex_prefix, period)
-        .query("ncm_prefixo_consulta in @mapping['comex']")
-        .groupby("ano_mes", as_index=False)["quantidade_veiculos"]
+        imports_source.groupby("ano_mes", as_index=False)["quantidade_veiculos"]
         .sum()
         .rename(columns={"quantidade_veiculos": "importacao"})
     )
@@ -404,29 +431,51 @@ with tab_estoque:
             use_container_width=True,
         )
 
-        if segment_name.startswith("Carga"):
-            truck_split = (
+        if "Caminhões" in mapping["anfavea"]:
+            trucks_only = (
                 filter_period(anfavea_segment, period)
-                .query("vehicle_group in @mapping['anfavea']")
-                .groupby(["ano_mes", "vehicle_group"], as_index=False)["emplacamentos"]
+                .query("vehicle_group == 'Caminhões'")
+                .groupby("ano_mes", as_index=False)["emplacamentos"]
                 .sum()
             )
+            imports_trucks = (
+                filter_period(comex_ncm, period)
+                .query("classe_carga in ['pesado_acima_5t','dumper_fora_estrada','cavalo_mecanico']")
+                .groupby("ano_mes", as_index=False)["quantidade_veiculos"]
+                .sum()
+                .rename(columns={"quantidade_veiculos": "importacao_caminhoes_pesados"})
+            )
+            trucks = trucks_only.merge(imports_trucks, on="ano_mes", how="outer").fillna(0)
+            trucks_long = trucks.melt(
+                id_vars="ano_mes",
+                value_vars=["importacao_caminhoes_pesados", "emplacamentos"],
+                var_name="serie",
+                value_name="unidades",
+            )
+            trucks_long["serie"] = trucks_long["serie"].map(
+                {
+                    "importacao_caminhoes_pesados": "Importacao caminhoes pesados (Comex 8704 >5t)",
+                    "emplacamentos": "Emplacamento caminhoes chineses (ANFAVEA)",
+                }
+            )
             st.plotly_chart(
-                px.bar(
-                    truck_split,
+                px.line(
+                    trucks_long,
                     x="ano_mes",
-                    y="emplacamentos",
-                    color="vehicle_group",
-                    labels={"ano_mes": "Mes", "emplacamentos": "Emplacamentos", "vehicle_group": "Segmento ANFAVEA"},
-                    title="Emplacamentos chineses: caminhoes x comerciais leves",
+                    y="unidades",
+                    color="serie",
+                    markers=True,
+                    labels={"ano_mes": "Mes", "unidades": "Unidades", "serie": ""},
+                    title="Foco caminhoes: importacao de pesados x emplacamento chines",
                 ),
                 use_container_width=True,
             )
             st.caption(
                 "Emplacamentos chineses de caminhoes por marca (Foton, JAC, Sany, Sinotruk) "
                 "so tem detalhe a partir de 2026; antes disso a serie usa a linha agregada "
-                "\"Outras empresas\" do grupo Caminhoes, que nesse grupo e praticamente toda "
-                "chinesa - proxy confiavel."
+                "\"Outras empresas\" do grupo Caminhoes, praticamente toda chinesa - proxy "
+                "confiavel. Do lado Comex, os caminhoes pesados sao o 8704 acima de 5 t, "
+                "mais dumpers e cavalos-mecanicos (estes ultimos despreziveis vindos da China)."
             )
 
         st.dataframe(channel, use_container_width=True, hide_index=True)

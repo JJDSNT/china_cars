@@ -30,14 +30,45 @@ MONTHS = {
     "Nov": "11",
     "Dez": "12",
 }
-COMEX_NCM_PREFIXES = ("8702", "8703", "8704", "8706", "8707", "8708", "8711")
+# 87012 = cavalos-mecanicos / caminhoes-trator (8701.2x), incluidos por
+# completude do universo de veiculos rodoviarios. NAO usamos o 8701 inteiro:
+# 8701.10 (motocultivadores) e 8701.9x (tratores agricolas) sao equipamento
+# fora de escopo, e 8701.30 (esteira) tem anomalia de reporte em 2023.
+COMEX_NCM_PREFIXES = ("8702", "8703", "8704", "8706", "8707", "8708", "8711", "87012")
 # Prefixos que representam veiculos completos: a quantidade estatistica destes
 # NCMs (unidade 11 = numero de unidades) pode ser lida como "veiculos".
-# 8711 = motocicletas. 8707 (carrocerias) e 8708 (autopecas, misto de kg e
-# unidades) ficam de fora.
-COMEX_VEHICLE_PREFIXES = ("8702", "8703", "8704", "8706", "8711")
+# 8711 = motocicletas; 87012 = cavalos-mecanicos. 8707 (carrocerias) e 8708
+# (autopecas, misto de kg e unidades) ficam de fora.
+COMEX_VEHICLE_PREFIXES = ("8702", "8703", "8704", "8706", "8711", "87012")
 COMEX_UNIT_NUMBER_OF_ITEMS = "11"
 COMEX_CHINA_CODE = "160"
+
+# Classe de carga para os NCMs de transporte de mercadorias (8704), separando
+# comerciais leves (<= 5 t) de caminhoes (> 5 t). Chave = subposicao de 6 digitos.
+# Cavalos-mecanicos (87012) recebem classe propria.
+COMEX_CARGO_CLASS_BY_SUBHEADING = {
+    "870421": "leve_ate_5t",
+    "870431": "leve_ate_5t",
+    "870441": "leve_ate_5t",
+    "870451": "leve_ate_5t",
+    "870422": "pesado_acima_5t",
+    "870423": "pesado_acima_5t",
+    "870432": "pesado_acima_5t",
+    "870442": "pesado_acima_5t",
+    "870443": "pesado_acima_5t",
+    "870452": "pesado_acima_5t",
+    "870410": "dumper_fora_estrada",
+    "870460": "outros_carga",
+    "870490": "outros_carga",
+}
+
+
+def _cargo_class(codigo_ncm: str, prefix: str) -> str | None:
+    if prefix == "87012":
+        return "cavalo_mecanico"
+    if prefix == "8704":
+        return COMEX_CARGO_CLASS_BY_SUBHEADING.get(codigo_ncm[:6], "outros_carga")
+    return None
 
 
 def _sign_value(direction: str, value: str) -> float:
@@ -757,6 +788,11 @@ def extract_comex_monthly(flow: str = "IMP") -> pd.DataFrame:
         "codigo_unidade_estatistica"
     ].eq(COMEX_UNIT_NUMBER_OF_ITEMS)
     detail["quantidade_veiculos"] = detail["quantidade_estatistica"].where(is_vehicle, 0.0)
+    # Classe de carga (leve/pesado/dumper) para o 8704, para isolar caminhoes.
+    detail["classe_carga"] = [
+        _cargo_class(code, prefix)
+        for code, prefix in zip(detail["codigo_ncm"], detail["ncm_prefixo_consulta"])
+    ]
     detail["extracted_at"] = datetime.now().isoformat(timespec="seconds")
     return detail
 
@@ -767,7 +803,7 @@ COMEX_MEASURES = ["quantidade_veiculos", "quantidade_estatistica", "kg_liquido",
 def build_comex_outputs(detail: pd.DataFrame) -> dict[str, pd.DataFrame]:
     by_ncm = (
         detail.groupby(
-            ["ano", "mes", "ano_mes", "fluxo", "pais", "ncm_prefixo_consulta", "codigo_ncm", "descricao_ncm"],
+            ["ano", "mes", "ano_mes", "fluxo", "pais", "ncm_prefixo_consulta", "classe_carga", "codigo_ncm", "descricao_ncm"],
             dropna=False,
             as_index=False,
         )[COMEX_MEASURES]

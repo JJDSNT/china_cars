@@ -1,8 +1,8 @@
-generated_at: '2026-07-07T17:52:45'
+generated_at: '2026-07-07T16:06:37'
 status: pass
 summary:
-  checks: 51
-  passed: 51
+  checks: 49
+  passed: 49
   failed: 0
 checks:
 - name: gold_anfavea_chinese_registrations_monthly.row_count
@@ -262,13 +262,3 @@ checks:
   observed: 0
   expected: 0
   details: Linhas com quantidade_veiculos fora de unidade 11 / prefixo de veiculo
-- name: file_manifest.files_exist
-  status: pass
-  observed: 0
-  expected: 0
-  details: ''
-- name: file_manifest.size_matches
-  status: pass
-  observed: 0
-  expected: 0
-  details: ''

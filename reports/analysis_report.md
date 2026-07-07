@@ -9,6 +9,8 @@ Este relatorio responde a duas perguntas de pesquisa:
 1. Evolucao mensal dos emplacamentos de carros chineses nos dados da ANFAVEA, de janeiro de 2021 ao mes mais recente disponivel no arquivo baixado de 2026.
 2. Importacoes brasileiras originarias da China no Comex Stat/MDIC para os prefixos/codigos `8702`, `8703`, `8704`, `8706`, `8707`, `8708` e `8711`, de janeiro de 2021 a junho de 2026.
 
+O **foco principal da analise sao os caminhoes**. Os demais segmentos (automoveis, motocicletas, onibus) entram por completude do universo automotivo, mas a leitura central e a de veiculos de carga pesados.
+
 ## Resultados ANFAVEA
 
 Cobertura obtida: janeiro de 2021 a junho de 2026.
@@ -68,19 +70,74 @@ Principais prefixos em 2026, janeiro-junho, por quantidade de veiculos:
 | 8707 (carrocerias) | 0 | 6.103.850 |
 | 8708 (autopecas) | 0 | 1.014.451.083 |
 
+## Foco: caminhoes (veiculos de carga)
+
+O NCM `8704` (veiculos para transporte de carga) mistura picapes e comerciais leves com
+caminhoes de verdade. Para isolar o caminhao pesado, o 8704 foi classificado por classe de
+peso a partir da subposicao de 6 digitos (coluna `classe_carga`):
+
+- **leve (<= 5 t)**: 870421/431/441/451 (picapes e comerciais leves)
+- **caminhoes (> 5 t)**: 870422/423/432/442/443/452
+- **fora-de-estrada / dumpers**: 870410
+- **carga (outros)**: 870460 (eletrico, sem classe de peso na NCM) e 870490
+- **cavalo-mecanico** (8701.2x, prefixo `87012`): caminhoes-trator
+
+Importacao 8704 da China por classe de peso, acumulado janeiro-junho (unidades):
+
+| Ano | Leve (<= 5 t) | Caminhoes (> 5 t) | Dumper | Outros (elet./nao class.) |
+| --- | ---: | ---: | ---: | ---: |
+| 2021 | 172 | 65 | 61 | 637 |
+| 2022 | 210 | 272 | 334 | 1.144 |
+| 2023 | 37 | 260 | 263 | 707 |
+| 2024 | 1.683 | 975 | 494 | 1.054 |
+| 2025 | 5.040 | 926 | 628 | 769 |
+| 2026 | 4.450 | 267 | 574 | 2.604 |
+
+Leituras:
+
+- O grosso do 8704 chines e **leve (<= 5 t) e eletrico** (870460), nao caminhao pesado. O
+  caminhao de verdade (> 5 t) da China roda entre ~250 e ~1.000 unidades/ano.
+- **Cavalos-mecanicos / caminhoes-trator (8701.2x)** da China sao **despreziveis**: 219
+  unidades em toda a serie 2021-2026 (dezenas por ano). A China quase nao exporta
+  cavalo-mecanico para o Brasil — achado proprio desta analise.
+- Por isso o **8701 inteiro nao foi adicionado**: fora o 8701.2 (minusculo), o 8701 da China
+  e trator agricola (8701.9x, fora de escopo) e motocultivador (8701.10, que era o que o
+  antigo "87011" capturava), alem de uma anomalia de reporte de 90 mil unidades em 870130 no
+  ano de 2023. Somente o subconjunto `87012` foi incluido, por completude da definicao de
+  "caminhao".
+
+Caminhao pesado, importacao (8704 > 5 t + dumper + cavalo-mecanico) vs emplacamento ANFAVEA
+(grupo Caminhoes, estimativa com "Outras empresas"), acumulado janeiro-junho por ano:
+
+| Ano | Importacao (unid.) | Emplacamento (estim.) |
+| --- | ---: | ---: |
+| 2021 | 126 | 405 |
+| 2022 | 606 | 718 |
+| 2023 | 524 | 592 |
+| 2024 | 1.472 | 865 |
+| 2025 | 1.704 | 1.373 |
+| 2026 jan-jun | 906 | 850 |
+
+Ao contrario do agregado de carga (dominado por comercial leve montado localmente / CKD), no
+recorte de **caminhao pesado** a importacao direta da China passa a acompanhar ou superar o
+emplacamento a partir de 2024 — o caminhao pesado chines chega mais como veiculo importado
+inteiro do que como montagem local.
+
 ## Estoque no canal (proxy importacao vs emplacamento)
 
-Cruzando o que **entra** no pais (importacao Comex, unidades) com o que e **emplacado** (ANFAVEA, marcas chinesas), obtem-se uma proxy direcional do estoque parado no canal (porto, importador, concessionaria). A serie ANFAVEA por segmento (`gold_anfavea_chinese_registrations_by_segment_monthly`) casa com os prefixos NCM correspondentes: automoveis com 8703; carga (comerciais leves + caminhoes) com 8704; onibus com 8702.
+Cruzando o que **entra** no pais (importacao Comex, unidades) com o que e **emplacado** (ANFAVEA, marcas chinesas), obtem-se uma proxy direcional do estoque parado no canal (porto, importador, concessionaria). A serie ANFAVEA por segmento (`gold_anfavea_chinese_registrations_by_segment_monthly`) casa com os prefixos NCM correspondentes: caminhoes pesados com o 8704 acima de 5 t (mais dumpers e cavalos-mecanicos); carga total (comerciais leves + caminhoes) com o 8704 inteiro; automoveis com 8703; onibus com 8702. No dashboard, a aba "Estoque no canal" traz "Caminhoes (pesados > 5t)" como segmento padrao.
 
 Leituras principais (acumulado por ano, unidades):
 
 | Segmento | 2024 imp / empl | 2025 imp / empl | 2026 jan-jun imp / empl |
 | --- | ---: | ---: | ---: |
+| Caminhoes pesados (> 5 t) | 1.472 / 865 | 1.704 / 1.373 | 906 / 850 |
+| Carga total (8704) | 4.206 / 6.705 | 7.363 / 11.866 | 7.895 / 8.981 |
 | Automoveis (8703) | 172.136 / 186.536 | 236.304 / 258.831 | 384.681 / 225.508 |
-| Carga (8704) | 4.206 / 6.705 | 7.363 / 11.866 | 7.895 / 8.981 |
 
+- **Caminhoes pesados (foco)**: a importacao direta acompanha ou supera o emplacamento a partir de 2024 — o caminhao pesado chines entra majoritariamente como veiculo importado, com pouca montagem local, e ha sinal de estoque parado no canal (imp > empl em 2024-2025).
+- **Carga total (8704)**: os emplacamentos superam a importacao direta em todos os anos, sinal de **producao local / montagem CKD** no Brasil (marcas de comercial leve como Effa, Shineray e JAC), e nao de estoque. O contraste com o recorte pesado mostra que o CKD esta no comercial leve, nao no caminhao pesado.
 - **Automoveis, 2026**: a importacao (384.681) supera os emplacamentos (225.508) em ~159 mil unidades — sinal de **estoque acumulando** no canal, consistente com o front-loading de importacoes antes do aumento do imposto de importacao.
-- **Carga/caminhoes**: os emplacamentos superam a importacao direta em todos os anos, sinal de **producao local / montagem CKD** no Brasil (marcas como Effa, Shineray e JAC), e nao de estoque.
 
 Ressalvas: o Comex e por pais de origem e a ANFAVEA por marca chinesa (populacoes que se sobrepoem, nao coincidem); ha defasagem de ~1-3 meses entre importar e emplacar; o NCM 8704 mistura picapes e caminhoes; e o emplacamento de automoveis antes de 2026 usa o proxy "Outras empresas", que inclui algumas marcas nao chinesas.
 
@@ -125,6 +182,7 @@ Os comunicados CAAM foram preservados no catalogo `raw_caam_evidence_catalog`. N
 - A ANFAVEA informa que nao disponibiliza estatisticas de autoveiculos detalhadas por modelo. O recorte de carros chineses foi feito por marca/empresa.
 - Marcas chinesas como BYD, GWM e Omoda aparecem no workbook anual apenas dentro da linha agregada "Outras empresas", sem abertura por marca. O detalhe por marca so existe nos arquivos de emplacamento de importados/nacionais por empresa e marca, publicamente expostos para 2026 no momento da coleta. Por isso a serie chinesa e apresentada como banda piso-estimativa: o piso e exato, e a estimativa usa a linha "Outras empresas" como teto nos meses sem detalhe. Para fechar a serie por marca de 2021 a 2025 seria necessario obter esses arquivos por marca para os anos anteriores (ou uma fonte complementar como a Fenabrave, que publica emplacamentos mensais por marca).
 - No Comex Stat, a entrega principal foi feita para importacoes do Brasil originarias da China. A quantidade de veiculos considera apenas NCMs de veiculos completos medidos em numero de unidades (unidade estatistica 11); autopecas e carrocerias entram apenas nas metricas de valor FOB e peso. Exportacoes nao foram misturadas ao resultado principal porque a pergunta nao especificou o fluxo.
+- Decisao 8701/8704 (foco em caminhoes): o NCM `8704` foi classificado por classe de peso (`classe_carga`) para separar o caminhao pesado (> 5 t) do comercial leve (<= 5 t). Do `8701` foi incluido apenas o subconjunto `8701.2` (cavalos-mecanicos / caminhoes-trator, prefixo de consulta `87012`), por completude da definicao de caminhao; o `8701` inteiro foi deixado de fora por conter trator agricola (8701.9x) e motocultivador (8701.10), ambos fora de escopo, alem de uma anomalia de reporte de ~90 mil unidades em 870130 no ano de 2023. Constatou-se que a importacao chinesa de cavalos-mecanicos e desprezivel (219 unidades em 2021-2026).
 - O codigo `8711` (motocicletas) foi confirmado pelo solicitante como o pretendido; a grafia inicial `87011` era erro de digitacao. Motocicletas dominam o volume importado e constituem um mercado distinto do de automoveis, por isso o total de veiculos e sempre apresentado aberto por prefixo NCM.
 - CPCA e CAAM sao fontes validas de evidencia; sua funcao analitica depende da compatibilidade entre indicador, recorte geografico, periodo e definicao operacional.
 - Os valores podem ser revisados pelas fontes oficiais.
