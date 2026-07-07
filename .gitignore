@@ -1,4 +1,5 @@
 .venv/
+.local-bin/
 __pycache__/
 *.py[cod]
 .pytest_cache/
@@ -13,12 +14,13 @@ data/processed/**
 data/curated/**
 outputs/excel/**
 outputs/figures/**
-*.duckdb
 *.duckdb.wal
 
 !data/raw/.gitkeep
 !data/interim/.gitkeep
 !data/processed/.gitkeep
 !data/curated/.gitkeep
+!data/processed/china_cars.duckdb
 !outputs/excel/.gitkeep
+!outputs/excel/china_cars_outputs.xlsx
 !outputs/figures/.gitkeep
