@@ -73,8 +73,29 @@ uv run python scripts/run_pipeline.py
 uv run streamlit run dashboard/app.py
 ```
 
+## Dashboard
+
+O dashboard interativo fica em `dashboard/app.py` e usa o DuckDB gerado pelo pipeline como backend:
+
+```bash
+uv run streamlit run dashboard/app.py
+```
+
+Depois de iniciar, acesse:
+
+```text
+http://localhost:8501
+```
+
+Visoes disponiveis:
+
+- ANFAVEA: evolucao mensal dos emplacamentos de marcas chinesas cobertas na base, acumulados anuais e abertura por marca.
+- Comex Stat/MDIC: importacoes originarias da China por mes, prefixo NCM e NCM completo.
+- Dados: tabelas finais `gold_` usadas no Excel e no relatorio.
+
 Artefatos finais:
 
 - DuckDB: `data/processed/china_cars.duckdb`
 - Excel: `outputs/excel/china_cars_outputs.xlsx`
+- Dashboard: `dashboard/app.py`
 - Relatorio: `reports/analysis_report.md`
