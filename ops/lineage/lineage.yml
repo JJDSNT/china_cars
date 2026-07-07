@@ -1,0 +1,34 @@
+lineage:
+  nodes:
+    - id: raw_anfavea_registrations
+      layer: raw
+    - id: brand_classification
+      layer: metadata
+    - id: gold_anfavea_chinese_registrations_monthly
+      layer: gold
+    - id: raw_comex_stat_china_automotive
+      layer: raw
+    - id: gold_comex_china_automotive_monthly
+      layer: gold
+  edges:
+    - from: raw_anfavea_registrations
+      to: gold_anfavea_chinese_registrations_monthly
+      transform: sql/gold/001_outputs.sql
+    - from: brand_classification
+      to: gold_anfavea_chinese_registrations_monthly
+      transform: sql/gold/001_outputs.sql
+    - from: raw_comex_stat_china_automotive
+      to: gold_comex_china_automotive_monthly
+      transform: sql/gold/001_outputs.sql
+
+# Exemplo:
+# lineage:
+#   nodes:
+#     - id: raw_registrations
+#       layer: raw
+#     - id: gold_monthly_sales
+#       layer: gold
+#   edges:
+#     - from: raw_registrations
+#       to: gold_monthly_sales
+#       transform: sql/gold/001_outputs.sql

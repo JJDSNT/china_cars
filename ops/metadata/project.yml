@@ -1,0 +1,23 @@
+project:
+  id: china_cars
+  name: China Cars Data Project
+  description: Projeto de engenharia e analise de dados com DuckDB, Excel e dashboard interativo.
+  owner: A definir
+  status: development
+  created_at: 2026-07-07
+  timezone: America/Sao_Paulo
+
+technical:
+  language: python
+  database: duckdb
+  dashboard: streamlit
+  package: china_cars
+
+paths:
+  raw: data/raw
+  interim: data/interim
+  processed: data/processed
+  curated: data/curated
+  duckdb: data/processed/china_cars.duckdb
+  excel_outputs: outputs/excel
+

@@ -1,0 +1,43 @@
+datasets:
+  raw:
+    - name: raw_anfavea_registrations
+      source: ANFAVEA
+      path: data/raw/anfavea/
+      format: xlsx
+      grain: monthly by company/brand when available
+      owner: A definir
+      update_frequency: monthly
+      pii: false
+    - name: raw_comex_stat_china_automotive
+      source: Comex Stat/MDIC
+      path: data/raw/comex_stat/
+      format: csv_or_api_export
+      grain: monthly by ncm and country
+      owner: A definir
+      update_frequency: monthly
+      pii: false
+  interim: []
+  processed: []
+  curated:
+    - name: gold_anfavea_chinese_registrations_monthly
+      source: ANFAVEA
+      grain: monthly
+      owner: A definir
+      pii: false
+    - name: gold_comex_china_automotive_monthly
+      source: Comex Stat/MDIC
+      grain: monthly by ncm
+      owner: A definir
+      pii: false
+
+# Exemplo:
+# datasets:
+#   raw:
+#     - name: raw_registrations
+#       source: registrations
+#       path: data/raw/registrations/registrations.csv
+#       format: csv
+#       grain: one row per registration event
+#       owner: A definir
+#       update_frequency: A definir
+#       pii: false

@@ -1,0 +1,40 @@
+expectations:
+  datasets:
+    - name: gold_anfavea_chinese_registrations_monthly
+      checks:
+        - type: not_null
+          columns: [ano_mes]
+        - type: min_value
+          column: emplacamentos
+          value: 0
+        - type: expected_period_coverage
+          start: 2021-01
+          end: latest_available_2026
+          grain: monthly
+    - name: gold_comex_china_automotive_monthly
+      checks:
+        - type: not_null
+          columns: [ano_mes, codigo_ncm, pais]
+        - type: accepted_values
+          column: pais
+          values: [China]
+        - type: min_value
+          column: valor_fob_usd
+          value: 0
+        - type: expected_period_coverage
+          start: 2021-01
+          end: 2026-06
+          grain: monthly
+
+# Exemplo:
+# expectations:
+#   datasets:
+#     - name: gold_monthly_sales
+#       checks:
+#         - type: not_null
+#           columns: [month, brand]
+#         - type: unique
+#           columns: [month, brand, model]
+#         - type: min_value
+#           column: units
+#           value: 0

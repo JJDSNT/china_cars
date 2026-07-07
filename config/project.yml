@@ -1,0 +1,9 @@
+project:
+  name: china_cars
+  database_path: data/processed/china_cars.duckdb
+  timezone: America/Sao_Paulo
+
+exports:
+  excel_dir: outputs/excel
+  default_workbook: china_cars_outputs.xlsx
+

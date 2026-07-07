@@ -1,0 +1,37 @@
+brands:
+  # Classificacao inicial para o recorte "carros chineses" nos dados da ANFAVEA.
+  # Revisar contra os nomes exatos encontrados nos arquivos brutos antes da carga final.
+  - brand: BYD
+    country_origin: China
+    include_in_chinese_cars_scope: true
+    notes: Marca chinesa.
+  - brand: CAOA CHERY
+    country_origin: China
+    include_in_chinese_cars_scope: true
+    notes: Marca Chery operada no Brasil pela CAOA.
+  - brand: CAOA CHANGAN
+    country_origin: China
+    include_in_chinese_cars_scope: true
+    notes: Marca Changan operada no Brasil pela CAOA; aparece nos dados ANFAVEA de 2026.
+  - brand: CHERY
+    country_origin: China
+    include_in_chinese_cars_scope: true
+    notes: Marca chinesa; pode aparecer como Chery ou Caoa Chery na fonte.
+  - brand: GWM
+    country_origin: China
+    include_in_chinese_cars_scope: true
+    notes: Great Wall Motor.
+  - brand: HAVAL
+    country_origin: China
+    include_in_chinese_cars_scope: true
+    notes: Marca/submarca da GWM; confirmar nomenclatura ANFAVEA.
+  - brand: JAC
+    country_origin: China
+    include_in_chinese_cars_scope: true
+    notes: JAC Motors.
+  - brand: LEAPMOTOR
+    country_origin: China
+    include_in_chinese_cars_scope: true
+    notes: Marca chinesa; aparece sob grupo Stellantis/FCA nos dados ANFAVEA de 2025-2026.
+
+review_required: true

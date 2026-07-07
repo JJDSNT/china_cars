@@ -1,0 +1,29 @@
+research_scope:
+  questions:
+    - id: anfavea_chinese_registrations
+      source: ANFAVEA
+      period_start: 2021-01
+      period_end: latest_available_2026
+      grain: monthly
+      subject: emplacamentos de carros chineses
+      output_tables:
+        - gold_anfavea_chinese_registrations_monthly
+        - gold_anfavea_chinese_registrations_by_brand_monthly
+    - id: comex_china_automotive
+      source: Comex Stat/MDIC
+      period_start: 2021-01
+      period_end: 2026-06
+      grain: monthly
+      country: China
+      ncm_codes:
+        - "8702"
+        - "8703"
+        - "8704"
+        - "8706"
+        - "8707"
+        - "8708"
+        - "87011"
+      unresolved_items:
+        - Confirmar se o fluxo desejado e importacao, exportacao ou ambos.
+        - Confirmar se 87011 e um codigo intencional, prefixo ou erro de digitacao.
+

@@ -1,0 +1,10 @@
+sources:
+  # Exemplo:
+  # registrations:
+  #   type: csv
+  #   path: data/raw/registrations/registrations.csv
+  #   delimiter: ","
+  #   encoding: utf-8
+  #   table: raw_registrations
+  []
+
