@@ -22,10 +22,13 @@ research_scope:
         - "8706"
         - "8707"
         - "8708"
-        - "87011"
+        - "8711"
+      resolved_items:
+        - >-
+          O codigo era "8711" (motocicletas). A grafia inicial "87011" foi confirmada
+          pelo solicitante como erro de digitacao.
       unresolved_items:
         - Confirmar se o fluxo desejado e importacao, exportacao ou ambos.
-        - Confirmar se 87011 e um codigo intencional, prefixo ou erro de digitacao.
   evidence_sources:
     - id: caam
       name: China Association of Automobile Manufacturers

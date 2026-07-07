@@ -55,7 +55,7 @@ Periodo:
 Filtros:
 
 - Pais: China.
-- Codigos: `8702`, `8703`, `8704`, `8706`, `8707`, `8708`, `87011`.
+- Codigos: `8702`, `8703`, `8704`, `8706`, `8707`, `8708`, `8711` (a grafia inicial `87011` era erro de digitacao).
 - Periodicidade: mensal.
 
 Campos alvo:
@@ -75,7 +75,7 @@ Pendencias:
 
 - Confirmar importacao, exportacao ou ambos.
 - Confirmar se os codigos serao tratados como prefixos de NCM ou como codigos completos.
-- Confirmar o codigo `87011`.
+- Codigo `8711` (motocicletas) confirmado pelo solicitante (grafia `87011` era erro de digitacao).
 
 ## CAAM
 

@@ -40,7 +40,7 @@ Tabelas finais previstas:
 ## Pendencias metodologicas
 
 - Confirmar se o fluxo Comex Stat desejado e importacao, exportacao ou ambos.
-- Confirmar o tratamento do codigo `87011`.
+- Codigo `8711` (motocicletas) confirmado pelo solicitante; a grafia `87011` na pergunta original era erro de digitacao.
 - Definir a lista oficial de marcas chinesas para classificar os dados da ANFAVEA.
 - Definir se "carros" inclui apenas automoveis ou tambem comerciais leves, caminhões e ônibus.
 

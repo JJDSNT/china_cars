@@ -30,11 +30,12 @@ MONTHS = {
     "Nov": "11",
     "Dez": "12",
 }
-COMEX_NCM_PREFIXES = ("8702", "8703", "8704", "8706", "8707", "8708", "87011")
+COMEX_NCM_PREFIXES = ("8702", "8703", "8704", "8706", "8707", "8708", "8711")
 # Prefixos que representam veiculos completos: a quantidade estatistica destes
 # NCMs (unidade 11 = numero de unidades) pode ser lida como "veiculos".
-# 8707 (carrocerias) e 8708 (autopecas, misto de kg e unidades) ficam de fora.
-COMEX_VEHICLE_PREFIXES = ("8702", "8703", "8704", "8706", "87011")
+# 8711 = motocicletas. 8707 (carrocerias) e 8708 (autopecas, misto de kg e
+# unidades) ficam de fora.
+COMEX_VEHICLE_PREFIXES = ("8702", "8703", "8704", "8706", "8711")
 COMEX_UNIT_NUMBER_OF_ITEMS = "11"
 COMEX_CHINA_CODE = "160"
 

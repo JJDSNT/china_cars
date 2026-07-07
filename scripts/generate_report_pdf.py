@@ -59,7 +59,7 @@ def main() -> None:
         Paragraph(
             "Analise de emplacamentos de marcas chinesas nos dados ANFAVEA e "
             "importacoes originarias da China no Comex Stat/MDIC para os codigos "
-            "8702, 8703, 8704, 8706, 8707, 8708 e 87011.",
+            "8702, 8703, 8704, 8706, 8707, 8708 e 8711.",
             styles["BodyText"],
         )
     )
@@ -163,7 +163,8 @@ def main() -> None:
     story.append(
         Paragraph(
             "Metrica principal: <b>quantidade de veiculos</b> (unidades) dos NCMs de veiculos "
-            "completos (8702, 8703, 8704, 8706, 87011), medidos em numero de unidades. O valor "
+            "completos (8702, 8703, 8704, 8706, 8711 - este ultimo motocicletas), medidos em "
+            "numero de unidades. O valor "
             "FOB e apresentado como referencia secundaria. Autopecas (8708) e carrocerias (8707) "
             "nao entram na contagem de veiculos por serem medidas majoritariamente em quilogramas.",
             styles["BodyText"],
@@ -248,7 +249,10 @@ def main() -> None:
         "nacionais por marca, publicados para 2026.",
         "O Comex foi tratado como importacoes originarias da China; a quantidade de veiculos "
         "considera apenas NCMs de veiculos completos medidos em numero de unidades.",
-        "O codigo 87011 foi tratado como prefixo de NCM e permanece pendente de validacao metodologica.",
+        "O codigo 8711 (motocicletas) foi confirmado pelo solicitante como o pretendido "
+        "(a grafia inicial \"87011\" era erro de digitacao). Motocicletas dominam o volume "
+        "importado e sao um mercado distinto de automoveis; a abertura por prefixo NCM "
+        "permite separa-las.",
         "Os dados brutos foram versionados via Git LFS quando disponivel e registrados no manifesto SHA256.",
     ]:
         story.append(Paragraph(f"- {text}", styles["BodyText"]))

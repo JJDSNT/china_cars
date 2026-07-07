@@ -7,7 +7,7 @@ Data de execucao: 2026-07-07
 Este relatorio responde a duas perguntas de pesquisa:
 
 1. Evolucao mensal dos emplacamentos de carros chineses nos dados da ANFAVEA, de janeiro de 2021 ao mes mais recente disponivel no arquivo baixado de 2026.
-2. Importacoes brasileiras originarias da China no Comex Stat/MDIC para os prefixos/codigos `8702`, `8703`, `8704`, `8706`, `8707`, `8708` e `87011`, de janeiro de 2021 a junho de 2026.
+2. Importacoes brasileiras originarias da China no Comex Stat/MDIC para os prefixos/codigos `8702`, `8703`, `8704`, `8706`, `8707`, `8708` e `8711`, de janeiro de 2021 a junho de 2026.
 
 ## Resultados ANFAVEA
 
@@ -39,32 +39,29 @@ Nota sobre a versao anterior: o recorte antigo cobria apenas Caoa Chery, Caoa Ch
 
 Cobertura obtida: importacoes, China como pais de origem, janeiro de 2021 a junho de 2026.
 
-Metrica principal: **quantidade de veiculos** (unidades) dos NCMs de veiculos completos (8702, 8703, 8704, 8706, 87011), medidos em numero de unidades. O valor FOB entra como referencia secundaria. Autopecas (8708) e carrocerias (8707) nao entram na contagem de veiculos porque sao medidas majoritariamente em quilogramas — somar sua "quantidade estatistica" a de veiculos produzia um numero sem sentido fisico (era o caso da versao anterior).
+Metrica principal: **quantidade de veiculos** (unidades) dos NCMs de veiculos completos (8702, 8703, 8704, 8706, 8711), medidos em numero de unidades. O valor FOB entra como referencia secundaria. Autopecas (8708) e carrocerias (8707) nao entram na contagem de veiculos porque sao medidas majoritariamente em quilogramas — somar sua "quantidade estatistica" a de veiculos produzia um numero sem sentido fisico (era o caso da versao anterior).
 
-| Ano | Veiculos (unidades) | Valor FOB US$ (referencia) |
-| --- | ---: | ---: |
-| 2021 | 44.949 | 1.040.835.786 |
-| 2022 | 19.611 | 1.298.117.388 |
-| 2023 | 61.609 | 2.173.194.020 |
-| 2024 | 181.309 | 4.692.243.885 |
-| 2025 | 255.720 | 5.075.023.114 |
-| 2026, jan-jun | 401.324 | 6.822.602.065 |
+**Atencao a composicao**: o prefixo `8711` sao **motocicletas**, que dominam o volume importado e formam um mercado distinto do de automoveis. Por isso o total de "veiculos" e apresentado aberto por tipo — misturar motos e automoveis num unico numero mascara a leitura.
 
-Comparacao acumulada janeiro-junho, em veiculos:
+Aberto por tipo, acumulado janeiro-junho (unidades):
 
-| Ano | Veiculos (unidades) |
-| --- | ---: |
-| 2025, jan-jun | 145.633 |
-| 2026, jan-jun | 401.324 |
+| Ano | Automoveis (8703) | Motocicletas (8711) | Comerciais (8702/8704) |
+| --- | ---: | ---: | ---: |
+| 2021 | 35.761 | 82.427 | 213 |
+| 2022 | 5.120 | 64.792 | 667 |
+| 2023 | 15.894 | 91.078 | 542 |
+| 2024 | 129.933 | 180.731 | 894 |
+| 2025 | 134.581 | 471.164 | 6.994 |
+| 2026 | 384.681 | 1.263.623 | 7.997 |
 
-O volume de veiculos importados da China no acumulado janeiro-junho quase triplicou (crescimento de 175,6%) de 2025 para 2026.
+No acumulado janeiro-junho de 2026 contra 2025: automoveis (8703) importados da China quase triplicaram (+185,8%) e motocicletas (8711) mais que dobraram (+168,2%).
 
 Principais prefixos em 2026, janeiro-junho, por quantidade de veiculos:
 
 | Prefixo NCM | Veiculos (unidades) | Valor FOB US$ (referencia) |
 | --- | ---: | ---: |
+| 8711 (motocicletas) | 1.263.623 | 158.497.564 |
 | 8703 (automoveis de passageiros) | 384.681 | 5.608.528.247 |
-| 87011 (tratores) | 8.615 | 2.805.681 |
 | 8704 (veiculos de carga) | 7.895 | 178.061.098 |
 | 8702 (transporte coletivo) | 102 | 12.472.228 |
 | 8706 (chassis) | 31 | 179.878 |
@@ -112,7 +109,7 @@ Os comunicados CAAM foram preservados no catalogo `raw_caam_evidence_catalog`. N
 - A ANFAVEA informa que nao disponibiliza estatisticas de autoveiculos detalhadas por modelo. O recorte de carros chineses foi feito por marca/empresa.
 - Marcas chinesas como BYD, GWM e Omoda aparecem no workbook anual apenas dentro da linha agregada "Outras empresas", sem abertura por marca. O detalhe por marca so existe nos arquivos de emplacamento de importados/nacionais por empresa e marca, publicamente expostos para 2026 no momento da coleta. Por isso a serie chinesa e apresentada como banda piso-estimativa: o piso e exato, e a estimativa usa a linha "Outras empresas" como teto nos meses sem detalhe. Para fechar a serie por marca de 2021 a 2025 seria necessario obter esses arquivos por marca para os anos anteriores (ou uma fonte complementar como a Fenabrave, que publica emplacamentos mensais por marca).
 - No Comex Stat, a entrega principal foi feita para importacoes do Brasil originarias da China. A quantidade de veiculos considera apenas NCMs de veiculos completos medidos em numero de unidades (unidade estatistica 11); autopecas e carrocerias entram apenas nas metricas de valor FOB e peso. Exportacoes nao foram misturadas ao resultado principal porque a pergunta nao especificou o fluxo.
-- O codigo `87011` foi tratado como prefixo de NCM (capturando 8701.1, tratores de eixo simples). Esse ponto permanece marcado para validacao metodologica: se a intencao era caminhoes-trator (cavalos-mecanicos), o codigo correto seria 8701.2. NCM operacional possui 8 digitos.
+- O codigo `8711` (motocicletas) foi confirmado pelo solicitante como o pretendido; a grafia inicial `87011` era erro de digitacao. Motocicletas dominam o volume importado e constituem um mercado distinto do de automoveis, por isso o total de veiculos e sempre apresentado aberto por prefixo NCM.
 - CPCA e CAAM sao fontes validas de evidencia; sua funcao analitica depende da compatibilidade entre indicador, recorte geografico, periodo e definicao operacional.
 - Os valores podem ser revisados pelas fontes oficiais.
 

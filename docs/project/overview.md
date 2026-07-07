@@ -35,7 +35,7 @@ Filtros iniciais:
 
 - Pais: China.
 - Periodo: 2021-01 a 2026-06.
-- Codigos informados: `8702`, `8703`, `8704`, `8706`, `8707`, `8708`, `87011`.
+- Codigos informados: `8702`, `8703`, `8704`, `8706`, `8707`, `8708`, `8711` (a grafia inicial `87011` era erro de digitacao, confirmado pelo solicitante).
 
 ## Escopo
 
@@ -60,13 +60,11 @@ Essa classificacao deve ser auditavel e pode exigir revisao manual, pois algumas
 
 Nos arquivos da ANFAVEA, a nomenclatura recente alterna entre emplacamento e licenciamento em alguns materiais. Para este projeto, o termo analitico sera `emplacamentos`, mantendo a coluna de origem da ANFAVEA para preservar rastreabilidade.
 
-### NCM `87011`
+### NCM `8711` (motocicletas)
 
-O codigo `87011` informado precisa de confirmacao antes da extracao final, porque NCM brasileira normalmente e registrada com 8 digitos, enquanto `8702`, `8703`, `8704`, `8706`, `8707` e `8708` sao posicoes de 4 digitos. Hipoteses a validar:
+O codigo informado originalmente como `87011` era erro de digitacao; o solicitante confirmou que o pretendido e `8711` (motocicletas, incluindo ciclomotores). Todos os prefixos ficam entao em posicoes de 4 digitos: `8702`, `8703`, `8704`, `8706`, `8707`, `8708` e `8711`, casados contra os NCMs completos de 8 digitos iniciados por cada prefixo.
 
-- o codigo pretendido era `8701`;
-- o codigo pretendido era um prefixo/subposicao iniciada por `87011`;
-- deve ser usada uma lista de NCMs completos de 8 digitos iniciados por esse prefixo.
+Observacao analitica: motocicletas dominam o volume importado da China e formam um mercado distinto do de automoveis. Por isso o total de "veiculos" e sempre apresentado aberto por prefixo, permitindo separar automoveis (`8703`) de motos (`8711`).
 
 ## Entregaveis
 

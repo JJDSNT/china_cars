@@ -18,6 +18,35 @@ def usd_bi(value: float) -> str:
     return f"US$ {value / 1_000_000_000:.2f} bi"
 
 
+# Rotulos legiveis para os prefixos NCM e para colunas usadas como dimensao/metrica.
+PREFIX_LABELS = {
+    "8702": "Onibus e coletivos (8702)",
+    "8703": "Automoveis (8703)",
+    "8704": "Veiculos de carga (8704)",
+    "8706": "Chassis com motor (8706)",
+    "8707": "Carrocerias (8707)",
+    "8708": "Autopecas (8708)",
+    "8711": "Motocicletas (8711)",
+}
+DIMENSION_LABELS = {
+    "tipo_ncm": "Tipo (prefixo NCM)",
+    "ncm_prefixo_consulta": "Tipo (prefixo NCM)",
+    "codigo_ncm": "NCM completo (8 digitos)",
+    "ano": "Ano",
+    "ano_mes": "Mes",
+}
+MEASURE_LABELS = {
+    "quantidade_veiculos": "Quantidade de veiculos (unidades)",
+    "valor_fob_usd": "Valor FOB (US$)",
+    "kg_liquido": "Peso liquido (kg)",
+    "quantidade_estatistica": "Quantidade estatistica (bruta)",
+}
+
+
+def prefix_label(code: str) -> str:
+    return PREFIX_LABELS.get(str(code), str(code))
+
+
 def filter_period(df: pd.DataFrame, period: tuple[str, str]) -> pd.DataFrame:
     return df[df["ano_mes"].between(period[0], period[1])].copy()
 
@@ -161,8 +190,18 @@ with tab_comex:
     filtered_prefix = filter_period(comex_prefix, period)
     filtered_ncm = filter_period(comex_ncm, period)
 
+    # Rotulo legivel do tipo de veiculo a partir do prefixo NCM.
+    filtered_prefix = filtered_prefix.assign(
+        tipo_ncm=filtered_prefix["ncm_prefixo_consulta"].map(prefix_label)
+    )
+    filtered_ncm = filtered_ncm.assign(
+        tipo_ncm=filtered_ncm["ncm_prefixo_consulta"].map(prefix_label)
+    )
+
     prefixes = sorted(filtered_prefix["ncm_prefixo_consulta"].unique().tolist())
-    selected_prefixes = st.multiselect("Prefixo NCM", prefixes, default=prefixes)
+    selected_prefixes = st.multiselect(
+        "Tipo (prefixo NCM)", prefixes, default=prefixes, format_func=prefix_label
+    )
     filtered_prefix = filtered_prefix[
         filtered_prefix["ncm_prefixo_consulta"].isin(selected_prefixes)
     ]
@@ -170,19 +209,23 @@ with tab_comex:
 
     st.caption(
         "Metrica principal: **quantidade de veiculos** (NCMs de veiculos completos "
-        "8702/8703/8704/8706/87011, medidos em numero de unidades). Valor FOB e kg "
-        "ficam como metricas secundarias. Autopecas (8708) e carrocerias (8707) nao "
-        "entram na contagem de veiculos."
+        "8702/8703/8704/8706/8711, medidos em numero de unidades). **8711 = motocicletas**, "
+        "que dominam o volume; use o filtro de tipo para separar automoveis de motos. "
+        "Valor FOB e kg ficam como metricas secundarias. Autopecas (8708) e carrocerias "
+        "(8707) nao entram na contagem de veiculos."
     )
     dimension = st.selectbox(
         "Dimensao",
-        ["ncm_prefixo_consulta", "codigo_ncm", "ano", "ano_mes"],
+        ["tipo_ncm", "codigo_ncm", "ano", "ano_mes"],
+        format_func=lambda col: DIMENSION_LABELS.get(col, col),
     )
     measure = st.selectbox(
         "Metrica",
         ["quantidade_veiculos", "valor_fob_usd", "kg_liquido", "quantidade_estatistica"],
+        format_func=lambda col: MEASURE_LABELS.get(col, col),
     )
     source = filtered_ncm if dimension == "codigo_ncm" else filtered_prefix
+    measure_label = MEASURE_LABELS.get(measure, measure)
 
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("Meses", filtered_month["ano_mes"].nunique())
@@ -191,12 +234,19 @@ with tab_comex:
     c4.metric("NCMs", filtered_ncm["codigo_ncm"].nunique())
 
     monthly_selected = (
-        filtered_prefix.groupby("ano_mes", as_index=False)[measure]
+        filtered_prefix.groupby(["ano_mes", "tipo_ncm"], as_index=False)[measure]
         .sum()
         .sort_values("ano_mes")
     )
     st.plotly_chart(
-        px.line(monthly_selected, x="ano_mes", y=measure, markers=True),
+        px.line(
+            monthly_selected,
+            x="ano_mes",
+            y=measure,
+            color="tipo_ncm",
+            markers=True,
+            labels={"ano_mes": "Mes", measure: measure_label, "tipo_ncm": "Tipo"},
+        ),
         use_container_width=True,
     )
 
@@ -206,19 +256,30 @@ with tab_comex:
         .sort_values(measure, ascending=False)
         .head(30)
     )
-    st.plotly_chart(px.bar(grouped, x=dimension, y=measure), use_container_width=True)
+    st.plotly_chart(
+        px.bar(
+            grouped,
+            x=dimension,
+            y=measure,
+            labels={
+                dimension: DIMENSION_LABELS.get(dimension, dimension),
+                measure: measure_label,
+            },
+        ),
+        use_container_width=True,
+    )
 
     heatmap_df = (
-        filtered_prefix.groupby(["ano", "ncm_prefixo_consulta"], as_index=False)[measure]
+        filtered_prefix.groupby(["ano", "tipo_ncm"], as_index=False)[measure]
         .sum()
-        .pivot(index="ncm_prefixo_consulta", columns="ano", values=measure)
+        .pivot(index="tipo_ncm", columns="ano", values=measure)
         .fillna(0)
     )
     st.plotly_chart(
         px.imshow(
             heatmap_df,
             aspect="auto",
-            labels={"x": "Ano", "y": "Prefixo NCM", "color": measure},
+            labels={"x": "Ano", "y": "Tipo (prefixo NCM)", "color": measure_label},
         ),
         use_container_width=True,
     )

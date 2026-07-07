@@ -1,4 +1,4 @@
-generated_at: '2026-07-07T15:19:49'
+generated_at: '2026-07-07T15:44:20'
 files:
 - path: data/raw/anfavea/2014/2014_autove_culos_8211_produ_o_licenciamento_exporta_es_em_unidades_de_montados_e_ckd_desmontados_exporta.xlsx
   size_bytes: 64977
@@ -1219,8 +1219,8 @@ files:
   size_bytes: 47537
   sha256: 3a7d0d2ba56e9a6f006ad99aa5c68b135b3899bce033d19d1a58289e9e3e342e
 - path: data/processed/china_cars.duckdb
-  size_bytes: 9187328
-  sha256: 72fa40eaa4e032795ddeb5835d639b0a2866b7dc858b0fb7056d268a7d44eb8a
+  size_bytes: 9449472
+  sha256: 4f5c3716a5dd9328487147311bad007a4f97fe8153eaf3d72335202b04c1cf80
 - path: outputs/excel/china_cars_outputs.xlsx
-  size_bytes: 257614
-  sha256: 9372414f739127272511195e2e140785b073db12de2a8b464145e81da0671967
+  size_bytes: 272058
+  sha256: 099af6de4d3c6b742c830932a424fe60b7215216f0c8698c0fb6c7196ad5f259

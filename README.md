@@ -99,7 +99,7 @@ Visoes disponiveis:
 ## Metodologia (pontos-chave)
 
 - **ANFAVEA - banda piso/estimativa**: o workbook anual so abre por marca as empresas associadas; marcas chinesas como BYD e GWM ficam na linha agregada "Outras empresas". O detalhe por marca vem dos arquivos de emplacamento de importados/nacionais por empresa e marca, publicados para 2026. Por isso a serie chinesa e uma banda: `emplacamentos_chinesas_min` (piso, marcas confirmadas, exato) e `emplacamentos` (estimativa/teto, usando "Outras empresas" como proxy nos meses sem detalhe). A coluna `metodo_outras` indica a origem de cada ponto.
-- **Comex - volume em veiculos**: a metrica principal e `quantidade_veiculos`, contada apenas para NCMs de veiculos completos (8702/8703/8704/8706/87011) medidos em numero de unidades. Autopecas (8708, medidas em kg) e carrocerias (8707) entram apenas em valor FOB e peso.
+- **Comex - volume em veiculos**: a metrica principal e `quantidade_veiculos`, contada apenas para NCMs de veiculos completos (8702/8703/8704/8706/8711) medidos em numero de unidades. **8711 sao motocicletas**, que dominam o volume e devem ser lidas separadamente dos automoveis (8703). Autopecas (8708, medidas em kg) e carrocerias (8707) entram apenas em valor FOB e peso.
 - **Arquivos rolantes**: o download reatualiza os arquivos do ano corrente (workbook ANFAVEA e CSVs do Comex), que crescem a cada divulgacao mensal.
 
 Artefatos finais:
