@@ -16,6 +16,24 @@ datasets:
       owner: A definir
       update_frequency: monthly
       pii: false
+    - name: raw_caam_china_auto_market
+      source: CAAM
+      path: data/raw/caam/
+      format: html_pdf_or_spreadsheet
+      grain: monthly market aggregates when available
+      owner: A definir
+      update_frequency: monthly
+      pii: false
+      role: auxiliary_context
+    - name: raw_cpca_china_passenger_car_market
+      source: CPCA
+      path: data/raw/cpca/
+      format: html_pdf_or_spreadsheet
+      grain: monthly passenger car market by maker/brand when available
+      owner: A definir
+      update_frequency: monthly
+      pii: false
+      role: auxiliary_context
   interim: []
   processed: []
   curated:

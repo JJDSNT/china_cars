@@ -77,3 +77,87 @@ Pendencias:
 - Confirmar se os codigos serao tratados como prefixos de NCM ou como codigos completos.
 - Confirmar o codigo `87011`.
 
+## CAAM
+
+Fonte:
+
+- China Association of Automobile Manufacturers.
+- Site oficial: `http://www.caam.org.cn/`.
+
+Uso no projeto:
+
+- Fonte auxiliar para contextualizar producao, vendas e exportacoes de veiculos chineses.
+- Possivel fonte de conciliacao macro para exportacoes chinesas de veiculos, sem substituir a consulta Comex Stat/MDIC.
+- Apoio metodologico para entender a diferenca entre dados de fabricantes, atacado, varejo e exportacao.
+
+Dados brutos esperados:
+
+```text
+data/raw/caam/
+  2021/
+  2022/
+  2023/
+  2024/
+  2025/
+  2026/
+```
+
+Campos alvo, quando disponiveis:
+
+- ano_mes
+- categoria
+- producao
+- vendas
+- exportacoes
+- veiculos_nova_energia
+- fonte_url
+- data_extracao
+
+Pendencias:
+
+- Confirmar disponibilidade publica historica mensal em formato estruturado.
+- Definir se os dados CAAM entrarao apenas no relatorio ou tambem no DuckDB como tabela auxiliar.
+
+## CPCA
+
+Fonte:
+
+- China Passenger Car Association / China Automobile Dealers Association Passenger Car Market Information Joint Branch.
+- Site oficial: `https://www.cpcaauto.com/`.
+- Area de dados: `https://data.cpcadata.com/`.
+
+Uso no projeto:
+
+- Fonte auxiliar para dados de automoveis de passageiros, rankings de fabricantes/marcas e relatorios mensais.
+- Apoio para classificar marcas chinesas, identificar fabricantes relevantes e contextualizar exportacoes/NEVs.
+- Nao substitui a ANFAVEA para medir emplacamentos no Brasil.
+
+Dados brutos esperados:
+
+```text
+data/raw/cpca/
+  2021/
+  2022/
+  2023/
+  2024/
+  2025/
+  2026/
+```
+
+Campos alvo, quando disponiveis:
+
+- ano_mes
+- fabricante
+- marca
+- segmento
+- varejo
+- atacado
+- exportacoes
+- veiculos_nova_energia
+- fonte_url
+- data_extracao
+
+Pendencias:
+
+- Verificar se a area de dados permite download automatizado ou se exige coleta manual.
+- Separar claramente varejo, atacado e exportacao para evitar mistura com emplacamentos brasileiros.

@@ -44,3 +44,11 @@ Tabelas finais previstas:
 - Definir a lista oficial de marcas chinesas para classificar os dados da ANFAVEA.
 - Definir se "carros" inclui apenas automoveis ou tambem comerciais leves, caminhões e ônibus.
 
+## Fontes auxiliares chinesas
+
+CAAM e CPCA entram como fontes complementares para contexto e validacao metodologica:
+
+- CAAM: dados agregados da industria automotiva chinesa, incluindo producao, vendas e exportacoes quando disponiveis.
+- CPCA: dados de automoveis de passageiros, rankings, relatorios mensais e informacoes de fabricantes/marcas.
+
+Essas fontes nao substituem a ANFAVEA para emplacamentos no Brasil nem o Comex Stat/MDIC para comercio exterior Brasil-China.

@@ -17,6 +17,10 @@ outputs/figures/**
 *.duckdb.wal
 
 !data/raw/.gitkeep
+!data/raw/caam/
+!data/raw/caam/.gitkeep
+!data/raw/cpca/
+!data/raw/cpca/.gitkeep
 !data/interim/.gitkeep
 !data/processed/.gitkeep
 !data/curated/.gitkeep

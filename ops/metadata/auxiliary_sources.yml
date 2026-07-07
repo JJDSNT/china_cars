@@ -1,0 +1,29 @@
+sources:
+  - id: caam
+    name: China Association of Automobile Manufacturers
+    portuguese_name: Associacao Chinesa de Fabricantes de Automoveis
+    official_url: http://www.caam.org.cn/
+    expected_raw_path: data/raw/caam/
+    role: auxiliary_context
+    project_use:
+      - Contextualizar producao, vendas e exportacoes de veiculos chineses.
+      - Apoiar validacao macro de tendencias de exportacao chinesa.
+      - Apoiar leitura metodologica da industria chinesa.
+    caveats:
+      - Nao mede emplacamentos no Brasil.
+      - Nao substitui Comex Stat/MDIC para importacoes brasileiras originarias da China.
+      - Disponibilidade historica estruturada precisa ser confirmada.
+  - id: cpca
+    name: China Passenger Car Association
+    portuguese_name: Associacao Chinesa de Automoveis de Passageiros
+    official_url: https://www.cpcaauto.com/
+    data_url: https://data.cpcadata.com/
+    expected_raw_path: data/raw/cpca/
+    role: auxiliary_context
+    project_use:
+      - Contextualizar automoveis de passageiros chineses.
+      - Apoiar classificacao de fabricantes/marcas chinesas.
+      - Usar rankings e relatorios mensais como evidencia complementar.
+    caveats:
+      - Dados de varejo/atacado/exportacao chineses nao sao equivalentes a emplacamentos brasileiros.
+      - Area de dados pode exigir coleta manual ou condicoes de acesso.
