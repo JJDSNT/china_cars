@@ -17,6 +17,7 @@ dependencies = [
   "streamlit>=1.36.0",
   "plotly>=5.22.0",
   "reportlab>=5.0.0",
+  "statsmodels>=0.14.6",
 ]
 
 [project.optional-dependencies]
