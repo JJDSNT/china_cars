@@ -1,23 +1,18 @@
-generated_at: '2026-07-07T15:14:26'
-status: pass
+generated_at: '2026-07-07T14:44:20'
+status: fail
 summary:
-  checks: 47
-  passed: 47
-  failed: 0
+  checks: 37
+  passed: 35
+  failed: 2
 checks:
 - name: gold_anfavea_chinese_registrations_monthly.row_count
   status: pass
-  observed: 66
+  observed: 65
   expected: '> 0'
   details: ''
 - name: gold_anfavea_chinese_registrations_by_brand_monthly.row_count
   status: pass
-  observed: 146
-  expected: '> 0'
-  details: ''
-- name: raw_anfavea_origin_brand_monthly.row_count
-  status: pass
-  observed: 435
+  observed: 87
   expected: '> 0'
   details: ''
 - name: gold_comex_china_automotive_monthly.row_count
@@ -40,11 +35,6 @@ checks:
   observed: 203
   expected: '> 0'
   details: ''
-- name: gold_cpca_article_metrics.row_count
-  status: pass
-  observed: 203
-  expected: '> 0'
-  details: ''
 - name: gold_cpca_passenger_market_monthly.row_count
   status: pass
   observed: 46
@@ -55,19 +45,14 @@ checks:
   observed: 13
   expected: '> 0'
   details: ''
-- name: gold_caam_evidence_catalog.row_count
-  status: pass
-  observed: 13
-  expected: '> 0'
-  details: ''
 - name: gold_anfavea_chinese_registrations_monthly.period_coverage
   status: pass
   observed:
     min: 2021-01
-    max: 2026-06
+    max: 2026-05
   expected:
     min: 2021-01
-    max: 2026-06
+    max: 2026-05
   details: ''
 - name: gold_comex_china_automotive_monthly.period_coverage
   status: pass
@@ -79,12 +64,12 @@ checks:
     max: 2026-06
   details: ''
 - name: gold_cpca_passenger_market_monthly.period_coverage
-  status: pass
+  status: fail
   observed:
     min: 2021-02
     max: 2026-06
   expected:
-    min: 2021-02
+    min: 2021-01
     max: 2026-06
   details: ''
 - name: gold_anfavea_chinese_registrations_monthly.ano_mes.not_null
@@ -132,21 +117,6 @@ checks:
   observed: 0
   expected: 0
   details: ''
-- name: gold_cpca_article_metrics.ano_mes.not_null
-  status: pass
-  observed: 0
-  expected: 0
-  details: ''
-- name: gold_cpca_article_metrics.metric_name.not_null
-  status: pass
-  observed: 0
-  expected: 0
-  details: ''
-- name: gold_cpca_article_metrics.source_file.not_null
-  status: pass
-  observed: 0
-  expected: 0
-  details: ''
 - name: raw_caam_evidence_catalog.title.not_null
   status: pass
   observed: 0
@@ -162,32 +132,12 @@ checks:
   observed: 0
   expected: 0
   details: ''
-- name: gold_caam_evidence_catalog.title.not_null
-  status: pass
-  observed: 0
-  expected: 0
-  details: ''
-- name: gold_caam_evidence_catalog.source_file.not_null
-  status: pass
-  observed: 0
-  expected: 0
-  details: ''
-- name: gold_caam_evidence_catalog.evidence_role.not_null
-  status: pass
-  observed: 0
-  expected: 0
-  details: ''
 - name: gold_anfavea_chinese_registrations_monthly.emplacamentos.non_negative
   status: pass
   observed: 0
   expected: 0
   details: ''
 - name: gold_anfavea_chinese_registrations_monthly.emplacamentos_total_anfavea.non_negative
-  status: pass
-  observed: 0
-  expected: 0
-  details: ''
-- name: gold_comex_china_automotive_by_ncm_monthly.quantidade_veiculos.non_negative
   status: pass
   observed: 0
   expected: 0
@@ -242,13 +192,13 @@ checks:
   observed: 0
   expected: 0
   details: ano_mes
-- name: brand_classification.scope_coverage
+- name: file_manifest.files_exist
   status: pass
   observed: 0
   expected: 0
   details: ''
-- name: gold_comex.vehicle_quantity_unit_integrity
-  status: pass
-  observed: 0
+- name: file_manifest.size_matches
+  status: fail
+  observed: 1
   expected: 0
-  details: Linhas com quantidade_veiculos fora de unidade 11 / prefixo de veiculo
+  details: data/processed/china_cars.duckdb
