@@ -2,6 +2,7 @@ from pathlib import Path
 
 from china_cars.db import connect
 from china_cars.paths import SQL_DIR
+from china_cars.quality import run_quality_checks, write_quality_results
 from china_cars.transform import build_all_tables, write_duckdb
 
 
@@ -24,3 +25,7 @@ def run_pipeline() -> None:
     write_duckdb(build_all_tables())
     for layer in ("bronze", "silver", "gold"):
         run_layer(layer)
+    result = run_quality_checks()
+    write_quality_results(result)
+    if result["status"] != "pass":
+        raise RuntimeError("Data quality checks failed. See ops/quality/results/latest.yml.")

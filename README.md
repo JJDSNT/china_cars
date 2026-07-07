@@ -53,6 +53,7 @@ tests/               Testes automatizados
 - `ops/metadata/brand_classification.yml`: classificacao de marcas chinesas para a ANFAVEA.
 - `ops/lineage/lineage.yml`: relacao entre fonte, transformacao e saida.
 - `ops/quality/expectations.yml`: expectativas minimas de qualidade dos dados.
+- `ops/quality/results/latest.yml`: resultado mais recente dos testes de qualidade e integridade.
 - `ops/run_logs/.gitkeep`: destino para logs ou manifestos de execucao.
 
 ## Fluxo proposto
@@ -70,6 +71,7 @@ tests/               Testes automatizados
 uv sync --extra dev
 uv run python scripts/download_data.py
 uv run python scripts/run_pipeline.py
+uv run python scripts/run_quality_checks.py
 uv run streamlit run dashboard/app.py
 ```
 

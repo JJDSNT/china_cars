@@ -1,0 +1,140 @@
+generated_at: '2026-07-07T14:14:57'
+status: pass
+summary:
+  checks: 25
+  passed: 25
+  failed: 0
+checks:
+- name: gold_anfavea_chinese_registrations_monthly.row_count
+  status: pass
+  observed: 65
+  expected: '> 0'
+  details: ''
+- name: gold_anfavea_chinese_registrations_by_brand_monthly.row_count
+  status: pass
+  observed: 87
+  expected: '> 0'
+  details: ''
+- name: gold_comex_china_automotive_monthly.row_count
+  status: pass
+  observed: 66
+  expected: '> 0'
+  details: ''
+- name: gold_comex_china_automotive_by_prefix_monthly.row_count
+  status: pass
+  observed: 362
+  expected: '> 0'
+  details: ''
+- name: gold_comex_china_automotive_by_ncm_monthly.row_count
+  status: pass
+  observed: 3870
+  expected: '> 0'
+  details: ''
+- name: gold_anfavea_chinese_registrations_monthly.period_coverage
+  status: pass
+  observed:
+    min: 2021-01
+    max: 2026-05
+  expected:
+    min: 2021-01
+    max: 2026-05
+  details: ''
+- name: gold_comex_china_automotive_monthly.period_coverage
+  status: pass
+  observed:
+    min: 2021-01
+    max: 2026-06
+  expected:
+    min: 2021-01
+    max: 2026-06
+  details: ''
+- name: gold_anfavea_chinese_registrations_monthly.ano_mes.not_null
+  status: pass
+  observed: 0
+  expected: 0
+  details: ''
+- name: gold_anfavea_chinese_registrations_monthly.emplacamentos.not_null
+  status: pass
+  observed: 0
+  expected: 0
+  details: ''
+- name: gold_comex_china_automotive_by_ncm_monthly.ano_mes.not_null
+  status: pass
+  observed: 0
+  expected: 0
+  details: ''
+- name: gold_comex_china_automotive_by_ncm_monthly.pais.not_null
+  status: pass
+  observed: 0
+  expected: 0
+  details: ''
+- name: gold_comex_china_automotive_by_ncm_monthly.ncm_prefixo_consulta.not_null
+  status: pass
+  observed: 0
+  expected: 0
+  details: ''
+- name: gold_comex_china_automotive_by_ncm_monthly.codigo_ncm.not_null
+  status: pass
+  observed: 0
+  expected: 0
+  details: ''
+- name: gold_anfavea_chinese_registrations_monthly.emplacamentos.non_negative
+  status: pass
+  observed: 0
+  expected: 0
+  details: ''
+- name: gold_anfavea_chinese_registrations_monthly.emplacamentos_total_anfavea.non_negative
+  status: pass
+  observed: 0
+  expected: 0
+  details: ''
+- name: gold_comex_china_automotive_by_ncm_monthly.quantidade_estatistica.non_negative
+  status: pass
+  observed: 0
+  expected: 0
+  details: ''
+- name: gold_comex_china_automotive_by_ncm_monthly.kg_liquido.non_negative
+  status: pass
+  observed: 0
+  expected: 0
+  details: ''
+- name: gold_comex_china_automotive_by_ncm_monthly.valor_fob_usd.non_negative
+  status: pass
+  observed: 0
+  expected: 0
+  details: ''
+- name: gold_anfavea_chinese_registrations_monthly.unique_key
+  status: pass
+  observed: 0
+  expected: 0
+  details: ano_mes
+- name: gold_anfavea_chinese_registrations_by_brand_monthly.unique_key
+  status: pass
+  observed: 0
+  expected: 0
+  details: ano_mes, vehicle_group, company_or_brand
+- name: gold_comex_china_automotive_monthly.unique_key
+  status: pass
+  observed: 0
+  expected: 0
+  details: ano_mes, fluxo, pais
+- name: gold_comex_china_automotive_by_prefix_monthly.unique_key
+  status: pass
+  observed: 0
+  expected: 0
+  details: ano_mes, fluxo, pais, ncm_prefixo_consulta
+- name: gold_comex_china_automotive_by_ncm_monthly.unique_key
+  status: pass
+  observed: 0
+  expected: 0
+  details: ano_mes, fluxo, pais, codigo_ncm
+- name: file_manifest.files_exist
+  status: pass
+  observed: 0
+  expected: 0
+  details: ''
+- name: file_manifest.size_matches
+  status: pass
+  observed: 0
+  expected: 0
+  details: ''
