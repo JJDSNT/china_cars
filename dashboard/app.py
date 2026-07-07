@@ -2,8 +2,19 @@ import duckdb
 import pandas as pd
 import plotly.express as px
 import streamlit as st
+import yaml
 
 from china_cars.db import database_path
+from china_cars.paths import PROJECT_ROOT
+
+
+def load_yaml(relative_path: str):
+    """Le um YAML de ops/ de forma tolerante (retorna None se ausente)."""
+    path = PROJECT_ROOT / relative_path
+    if not path.exists():
+        return None
+    with path.open(encoding="utf-8") as handle:
+        return yaml.safe_load(handle)
 
 
 st.set_page_config(page_title="China Cars", layout="wide")
@@ -121,8 +132,18 @@ period = st.sidebar.select_slider(
     tab_caam,
     tab_compare,
     tab_data,
+    tab_saude,
 ) = st.tabs(
-    ["ANFAVEA", "Comex Stat", "Estoque no canal", "CPCA", "CAAM", "Comparativo", "Dados"]
+    [
+        "ANFAVEA",
+        "Comex Stat",
+        "Estoque no canal",
+        "CPCA",
+        "CAAM",
+        "Comparativo",
+        "Dados",
+        "Saude dos dados",
+    ]
 )
 
 with tab_anfavea:
@@ -626,3 +647,125 @@ with tab_data:
         mime="text/csv",
     )
     st.dataframe(data, use_container_width=True, hide_index=True)
+
+with tab_saude:
+    st.subheader("Saude dos dados")
+    st.caption(
+        "Painel de confianca: os dados sao **atuais e validados**? Reune os 51 checks "
+        "automaticos de qualidade, a cobertura/frescor de cada fonte e o escopo declarado "
+        "da analise. Ignora o filtro de periodo da barra lateral - mostra sempre o estado "
+        "completo do pipeline."
+    )
+
+    # --- Bloco 1: Qualidade (ops/quality/results/latest.yml) ---
+    st.markdown("#### 1. Qualidade")
+    quality = load_yaml("ops/quality/results/latest.yml")
+    if quality is None:
+        st.info(
+            "Sem resultado de qualidade. Rode `python scripts/run_quality_checks.py`."
+        )
+    else:
+        summary = quality.get("summary", {})
+        total = summary.get("checks", 0)
+        passed = summary.get("passed", 0)
+        failed = summary.get("failed", 0)
+        status = quality.get("status", "?")
+        generated_at = str(quality.get("generated_at", "-")).replace("T", " ")
+
+        if status == "pass" and failed == 0:
+            st.success(f"**{passed}/{total} checks OK** - ultima verificacao em {generated_at}")
+        else:
+            st.error(f"**{failed} de {total} checks falharam** - ultima verificacao em {generated_at}")
+
+        c1, c2, c3 = st.columns(3)
+        c1.metric("Checks aprovados", f"{passed}/{total}")
+        c2.metric("Falhas", failed)
+        c3.metric("Status", "OK" if status == "pass" else status.upper())
+
+        checks_df = pd.DataFrame(quality.get("checks", []))
+        if not checks_df.empty:
+            failures = checks_df[checks_df["status"] != "pass"]
+            if not failures.empty:
+                st.markdown("**Checks com falha:**")
+                st.dataframe(
+                    failures[["name", "status", "observed", "expected", "details"]],
+                    use_container_width=True,
+                    hide_index=True,
+                )
+            with st.expander(f"Ver todos os {len(checks_df)} checks"):
+                st.dataframe(
+                    checks_df[["name", "status", "observed", "expected"]],
+                    use_container_width=True,
+                    hide_index=True,
+                )
+
+    # --- Bloco 2: Cobertura e frescor ---
+    st.markdown("#### 2. Cobertura e frescor")
+    st.caption("Ate quando cada fonte vai e quantos meses/linhas ela cobre.")
+    coverage_sources = {
+        "ANFAVEA (emplacamentos)": anfavea,
+        "Comex Stat (importacao)": comex,
+        "CPCA (mercado China)": cpca,
+    }
+    coverage_rows = []
+    for label, df in coverage_sources.items():
+        if df.empty or "ano_mes" in df.columns and df["ano_mes"].dropna().empty:
+            coverage_rows.append({"Fonte": label, "Primeiro mes": "-", "Ultimo mes": "-", "Meses": 0, "Linhas": 0})
+            continue
+        meses = df["ano_mes"].dropna()
+        coverage_rows.append(
+            {
+                "Fonte": label,
+                "Primeiro mes": meses.min(),
+                "Ultimo mes": meses.max(),
+                "Meses": meses.nunique(),
+                "Linhas": len(df),
+            }
+        )
+    coverage_df = pd.DataFrame(coverage_rows)
+    latest_month = max(
+        (r["Ultimo mes"] for r in coverage_rows if r["Ultimo mes"] != "-"),
+        default="-",
+    )
+    m1, m2 = st.columns(2)
+    m1.metric("Mes mais recente (qualquer fonte)", latest_month)
+    m2.metric("Fontes cobertas", len(coverage_rows))
+    st.dataframe(coverage_df, use_container_width=True, hide_index=True)
+
+    # --- Bloco 3: Escopo e linhagem ---
+    st.markdown("#### 3. Escopo e linhagem")
+    scope = load_yaml("ops/metadata/research_scope.yml")
+    brands_cfg = load_yaml("ops/metadata/brand_classification.yml")
+
+    focus = None
+    ncm_codes = []
+    if scope:
+        rs = scope.get("research_scope", {})
+        focus = rs.get("primary_focus")
+        for q in rs.get("questions", []):
+            if q.get("ncm_codes"):
+                ncm_codes = q["ncm_codes"]
+    if focus:
+        st.info(f"**Foco principal:** {focus.strip()}")
+    if ncm_codes:
+        labels = ", ".join(f"`{code}`" for code in ncm_codes)
+        st.markdown(f"**NCMs consultados (Comex):** {labels}")
+        st.caption(
+            "8704 classificado por classe de peso (leve <= 5 t vs caminhoes > 5 t); "
+            "87012 = cavalos-mecanicos, incluido por completude (importacao chinesa desprezivel)."
+        )
+
+    if brands_cfg:
+        brands = brands_cfg.get("brands", [])
+        in_scope = sorted(
+            b["brand"] for b in brands if b.get("include_in_chinese_cars_scope")
+        )
+        out_scope = sorted(
+            b["brand"] for b in brands if not b.get("include_in_chinese_cars_scope")
+        )
+        st.markdown(f"**Marcas chinesas no recorte ({len(in_scope)}):** {', '.join(in_scope)}")
+        if out_scope:
+            st.caption(
+                f"Fora do recorte (aparecem em \"Outras empresas\" mas nao sao chinesas): "
+                f"{', '.join(out_scope)}"
+            )
